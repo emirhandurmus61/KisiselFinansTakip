@@ -1,0 +1,197 @@
+@model List<KisiselFinansTakip.Models.ViewModels.ButceHedefleriViewModel>
+
+@{
+    ViewData["Title"] = "Mevcut Bütçe Hedeflerim";
+    int secilenAy = ViewBag.SecilenAy ?? DateTime.Now.Month;
+    int secilenYil = ViewBag.SecilenYil ?? DateTime.Now.Year;
+    decimal toplamHedeflenen = ViewBag.ToplamHedeflenen ?? 0m;
+    decimal toplamHarcanan = ViewBag.ToplamHarcanan ?? 0m;
+    decimal kalanButce = ViewBag.KalanButce ?? 0m;
+
+    var aylar = new Dictionary<int, string>
+    {
+        { 1, "Ocak" }, { 2, "Şubat" }, { 3, "Mart" }, { 4, "Nisan" },
+        { 5, "Mayıs" }, { 6, "Haziran" }, { 7, "Temmuz" }, { 8, "Ağustos" },
+        { 9, "Eylül" }, { 10, "Ekim" }, { 11, "Kasım" }, { 12, "Aralık" }
+    };
+
+    int suankiYil = DateTime.Now.Year;
+    var yillar = Enumerable.Range(suankiYil - 2, 5).ToList();
+}
+
+<div class="row page-titles mx-0 align-items-center">
+    <div class="col-sm-6 p-md-0">
+        <div class="welcome-text">
+            <h4 class="font-weight-bold text-primary">Bütçe Hedeflerimin Durumu</h4>
+            <p class="mb-0 text-muted">Aylık harcama limitlerinize ne kadar yaklaştığınızı canlı takip edin</p>
+        </div>
+    </div>
+    <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+        <a asp-controller="ButceHedefleri" asp-action="ButceHedefleri" class="btn btn-primary shadow-sm font-weight-bold">
+            <i class="fa fa-plus-circle mr-1"></i> Yeni Hedef Ekle
+        </a>
+    </div>
+</div>
+
+@if (TempData["Mesaj"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+        <i class="fa fa-check-circle mr-1"></i> @TempData["Mesaj"]
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+@if (TempData["HataMesaji"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+        <i class="fa fa-exclamation-triangle mr-1"></i> @TempData["HataMesaji"]
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+<!-- Dönem Seçimi Filtresi -->
+<div class="card shadow-sm mb-4">
+    <div class="card-body py-3">
+        <form method="get" asp-action="ButceHedeflerim" class="form-row align-items-center">
+            <div class="col-md-4 my-1">
+                <label class="sr-only">Yıl</label>
+                <select name="yilFiltre" class="form-control">
+                    @foreach (var y in yillar)
+                    {
+                        <option value="@y" selected="@(secilenYil == y ? "selected" : null)">@y Yılı</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-4 my-1">
+                <label class="sr-only">Ay</label>
+                <select name="ayFiltre" class="form-control">
+                    @foreach (var ay in aylar)
+                    {
+                        <option value="@ay.Key" selected="@(secilenAy == ay.Key ? "selected" : null)">@ay.Value</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-4 my-1">
+                <button type="submit" class="btn btn-primary btn-block font-weight-bold">
+                    <i class="fa fa-calendar mr-1"></i> Dönemi Göster
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Dönem Bütçe Özet Kartları -->
+<div class="row mb-3">
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 bg-primary text-white">
+            <div class="card-body py-3 d-flex justify-content-between align-items-center">
+                <div>
+                    <h6 class="text-white-50 mb-1">Toplam Hedeflenen Limit</h6>
+                    <h3 class="text-white font-weight-bold mb-0">@toplamHedeflenen.ToString("N2") ₺</h3>
+                </div>
+                <i class="fa fa-bullseye fa-2x text-white-50"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 bg-danger text-white">
+            <div class="card-body py-3 d-flex justify-content-between align-items-center">
+                <div>
+                    <h6 class="text-white-50 mb-1">Toplam Harcanan</h6>
+                    <h3 class="text-white font-weight-bold mb-0">@toplamHarcanan.ToString("N2") ₺</h3>
+                </div>
+                <i class="fa fa-receipt fa-2x text-white-50"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 @(kalanButce >= 0 ? "bg-success" : "bg-dark") text-white">
+            <div class="card-body py-3 d-flex justify-content-between align-items-center">
+                <div>
+                    <h6 class="text-white-50 mb-1">Kalan Limit (Bütçe)</h6>
+                    <h3 class="text-white font-weight-bold mb-0">@kalanButce.ToString("N2") ₺</h3>
+                </div>
+                <i class="fa fa-shield-alt fa-2x text-white-50"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Hedef İlerleme Kartları -->
+<div class="row">
+    @if (Model != null && Model.Any())
+    {
+        @foreach (var hedef in Model)
+        {
+            var harcanan = hedef.ToplamHarcama;
+            var limit = hedef.HedefTutar;
+            int yuzde = limit > 0 ? (int)((harcanan / limit) * 100) : 0;
+            var fark = limit - harcanan;
+            bool limitAsildi = harcanan > limit;
+            var progressClass = limitAsildi ? "bg-danger" : (yuzde > 80 ? "bg-warning" : "bg-success");
+
+            <div class="col-xl-4 col-lg-6 col-md-6 mb-4">
+                <div class="card shadow-sm h-100 border-0">
+                    <div class="card-header border-bottom d-flex justify-content-between align-items-center">
+                        <h5 class="card-title font-weight-bold text-dark m-0">
+                            @hedef.KategoriAdi
+                        </h5>
+                        <form asp-action="Sil" method="post" class="d-inline" onsubmit="return confirm('Bu bütçe hedefini silmek istediğinizden emin misiniz?');">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@hedef.HedefID" />
+                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Hedefi Kaldır">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </form>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Harcama Durumu:</span>
+                            <span class="font-weight-bold @(limitAsildi ? "text-danger" : "text-dark")">
+                                @harcanan.ToString("N2") ₺ / @limit.ToString("N2") ₺
+                            </span>
+                        </div>
+
+                        <div class="progress mb-3" style="height: 14px;">
+                            <div class="progress-bar @progressClass progress-bar-striped" role="progressbar" style="width: @Math.Min(yuzde, 100)%;" aria-valuenow="@yuzde" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                            <div>
+                                <small class="text-muted d-block">İlerleme Oranı</small>
+                                <span class="badge @(limitAsildi ? "badge-danger" : (yuzde > 80 ? "badge-warning" : "badge-success")) font-weight-bold">
+                                    %@yuzde
+                                </span>
+                            </div>
+                            <div class="text-right">
+                                <small class="text-muted d-block">@(limitAsildi ? "Limit Aşımı" : "Kalan Bütçe")</small>
+                                <strong class="@(limitAsildi ? "text-danger" : "text-success")">
+                                    @Math.Abs(fark).ToString("N2") ₺
+                                </strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="col-12">
+            <div class="card shadow-sm text-center py-5">
+                <div class="card-body">
+                    <i class="fa fa-bullseye fa-3x text-primary mb-3"></i>
+                    <h4>@aylar[secilenAy] @secilenYil dönemi için bütçe hedefi bulunamadı.</h4>
+                    <p class="text-muted mb-4">Bu ay için harcama limitleri tanımlayarak bütçenizi kontrol altında tutabilirsiniz.</p>
+                    <a asp-controller="ButceHedefleri" asp-action="ButceHedefleri" class="btn btn-primary font-weight-bold">
+                        <i class="fa fa-plus-circle mr-1"></i> Hemen Hedef Belirle
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

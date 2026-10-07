@@ -1,18 +1,21 @@
 using KisiselFinansTakip.Data;
 using Microsoft.EntityFrameworkCore;
 
+// PostgreSQL timestamp uyumlulugu (DateTime.Now ve Local timestamp hatasini onler)
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Veritabaný baðlantýsý
+// Veritabani baglantisi (PostgreSQL)
 builder.Services.AddDbContext<VeritabaniContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("VeritabaniBaglantisi")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("VeritabaniBaglantisi")));
 
-// Session için gerekli servisler
+// Session icin gerekli servisler
 builder.Services.AddDistributedMemoryCache();
 
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.IdleTimeout = TimeSpan.FromMinutes(60);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
@@ -22,7 +25,7 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// Hata sayfasý ve güvenlik ayarlarý
+// Hata sayfasi ve guvenlik ayarlari
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -35,13 +38,13 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-// ** Session middleware bu noktada olmalý **
+// ** Session middleware **
 app.UseSession();
 
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Default}/{action=Index}/{id?}");
 
 app.Run();

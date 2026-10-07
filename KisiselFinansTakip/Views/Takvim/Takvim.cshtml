@@ -1,0 +1,132 @@
+@{
+    ViewData["Title"] = "Finansal Takvim";
+}
+
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<div class="row page-titles mx-0 align-items-center">
+    <div class="col-sm-6 p-md-0">
+        <div class="welcome-text">
+            <h4 class="font-weight-bold text-primary">Finansal Takvim</h4>
+            <p class="mb-0 text-muted">Aylık ve günlük gelir, gider ve bütçe hedeflerinizi takvim üzerinde takip edin</p>
+        </div>
+    </div>
+    <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Default" asp-action="Index">Ana Panel</a></li>
+            <li class="breadcrumb-item active">Takvim</li>
+        </ol>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <div id="calendar" class="app-fullcalendar"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/focus-2/vendor/jqueryui/js/jquery-ui.min.js"></script>
+    <script src="~/focus-2/vendor/moment/moment.min.js"></script>
+    <script src="~/focus-2/vendor/fullcalendar/js/fullcalendar.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#calendar').fullCalendar({
+                locale: 'tr',
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,agendaWeek,agendaDay'
+                },
+                navLinks: true,
+                editable: false,
+                eventLimit: true,
+                displayEventTime: false,
+                events: '/Takvim/GetEvents',
+
+                eventClick: function (info) {
+                    const content = `
+                        <strong>Başlık:</strong> ${info.title}<br>
+                        ${info.aciklama ? `<strong>Açıklama:</strong> ${info.aciklama}<br>` : ''}
+                        ${info.tutar ? `<strong>Tutar:</strong> ${info.tutar} ₺<br>` : ''}
+                        ${info.tip ? `<strong>Tip:</strong> ${info.tip}<br>` : ''}
+                    `;
+                    Swal.fire({
+                        title: 'İşlem Detayı',
+                        html: content,
+                        icon: 'info',
+                        confirmButtonText: 'Kapat'
+                    });
+                },
+
+                dayClick: function (date) {
+                    const selectedDate = date.format('YYYY-MM-DD');
+
+                    $.ajax({
+                        url: '/Takvim/GetEventsByDate',
+                        data: { date: selectedDate },
+                        success: function (data) {
+                            if (!data || data.length === 0) {
+                                Swal.fire({
+                                    title: moment(date).format("DD.MM.YYYY"),
+                                    html: 'Bu tarihte işlem bulunmamaktadır.',
+                                    icon: 'info'
+                                });
+                            } else {
+                                let html = '';
+                                data.forEach(e => {
+                                    html += `
+                                        <div style="margin-bottom: 10px;">
+                                            <strong>${e.baslik || e.Baslik}</strong><br>
+                                            ${e.aciklama || e.Aciklama ? `Açıklama: ${e.aciklama || e.Aciklama}<br>` : ''}
+                                            Tutar: ${e.tutar || e.Tutar} ₺<br>
+                                            Tip: ${e.tip || e.Tip}
+                                            <hr>
+                                        </div>
+                                    `;
+                                });
+
+                                Swal.fire({
+                                    title: moment(date).format("DD.MM.YYYY"),
+                                    html: html,
+                                    icon: 'info',
+                                    confirmButtonText: 'Kapat'
+                                });
+                            }
+                        },
+                        error: function () {
+                            Swal.fire({
+                                title: 'Hata',
+                                text: 'İşlemler yüklenirken bir sorun oluştu.',
+                                icon: 'error'
+                            });
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+
+    <style>
+        .fc-toolbar,
+        .fc-header-toolbar {
+            z-index: 1 !important;
+        }
+
+        .fc-view-container,
+        .fc-scroller,
+        .fc {
+            z-index: 0 !important;
+        }
+
+        .swal2-popup {
+            font-size: 1rem !important;
+        }
+    </style>
+}

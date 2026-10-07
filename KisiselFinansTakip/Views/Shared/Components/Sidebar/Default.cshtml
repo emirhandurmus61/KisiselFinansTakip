@@ -1,157 +1,58 @@
-﻿<div class="quixnav">
+<div class="quixnav">
     <div class="quixnav-scroll">
         <ul class="metismenu" id="menu">
             <li class="nav-label first">Ana Menü</li>
             <li>
-                <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                    <i class="icon icon-single-04"></i><span class="nav-text">İstatistikler</span>
+                <a asp-controller="Default" asp-action="Index" aria-expanded="false">
+                    <i class="icon icon-chart-bar-33"></i><span class="nav-text">Genel Bakış & İstatistik</span>
                 </a>
-                <ul aria-expanded="false">
-                    <li>
-                        <a asp-controller="Default" asp-action="Index">İstatistikler</a>
-                    </li>
+            </li>
 
-                    <li><a href="~/focus-2/index2.html">Dashboard 2</a></li>
-                </ul>
-            </li>
-            <li class="nav-label first">Admin</li>
+            <li class="nav-label">Finansal İşlemler</li>
             <li>
                 <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                    <i class="icon icon-single-04"></i><span class="nav-text">Admin</span>
+                    <i class="fa fa-exchange-alt"></i><span class="nav-text">Gelir & Gider</span>
                 </a>
                 <ul aria-expanded="false">
-                    <li>
-                        <a asp-controller="Kategori" asp-action="Kategori">Kategoriler</a>
-                    </li>
-                </ul>
-            </li>
-            <li class="nav-label">Apps</li>
-            <li>
-                <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                    <i class="icon icon-app-store"></i><span class="nav-text">Apps</span>
-                </a>
-                <ul aria-expanded="false">
-                    <li>
-                        <a asp-controller="Profile" asp-action="Profile">Profil</a>
-                    </li>
-                    <li>
-                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">Email</a>
-                        <ul aria-expanded="false">
-                            <li><a href="~/focus-2/email-compose.html">Mail Oluştur</a></li>
-                            <li><a href="~/focus-2/email-inbox.html">Gelen Kutusu</a></li>
-                            <li><a href="~/focus-2/email-read.html">Mail Oku</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="~/focus-2/app-calender.html">Takvim</a></li>
-                </ul>
-            </li>
-            <li>
-                <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                    <i class="icon icon-chart-bar-33"></i><span class="nav-text">Grafikler</span>
-                </a>
-                <ul aria-expanded="false">
-                    <li><a href="~/focus-2/chart-flot.html">Flot</a></li>
-                    <li><a href="~/focus-2/chart-morris.html">Morris</a></li>
-                    <li><a href="~/focus-2/chart-chartjs.html">Chartjs</a></li>
-                    <li><a href="~/focus-2/chart-chartist.html">Chartist</a></li>
-                    <li><a href="~/focus-2/chart-sparkline.html">Sparkline</a></li>
-                    <li><a href="~/focus-2/chart-peity.html">Peity</a></li>
-                </ul>
-            </li>
-            <li class="nav-label">Components</li>
-            <li>
-                <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                    <i class="icon icon-world-2"></i><span class="nav-text">Bootstrap</span>
-                </a>
-                <ul aria-expanded="false">
-                    <li><a href="~/focus-2/ui-accordion.html">Accordion</a></li>
-                    <li><a href="~/focus-2/ui-alert.html">Alert</a></li>
-                    <li><a href="~/focus-2/ui-badge.html">Badge</a></li>
-                    <li><a href="~/focus-2/ui-button.html">Button</a></li>
-                    <li><a href="~/focus-2/ui-modal.html">Modal</a></li>
-                    <li><a href="~/focus-2/ui-button-group.html">Button Group</a></li>
-                    <li><a href="~/focus-2/ui-list-group.html">List Group</a></li>
-                    <li><a href="~/focus-2/ui-media-object.html">Media Object</a></li>
-                    <li><a href="~/focus-2/ui-card.html">Cards</a></li>
-                    <li><a href="~/focus-2/ui-carousel.html">Carousel</a></li>
-                    <li><a href="~/focus-2/ui-dropdown.html">Dropdown</a></li>
-                    <li><a href="~/focus-2/ui-popover.html">Popover</a></li>
-                    <li><a href="~/focus-2/ui-progressbar.html">Progressbar</a></li>
-                    <li><a href="~/focus-2/ui-tab.html">Tab</a></li>
-                    <li><a href="~/focus-2/ui-typography.html">Typography</a></li>
-                    <li><a href="~/focus-2/ui-pagination.html">Pagination</a></li>
-                    <li><a href="~/focus-2/ui-grid.html">Grid</a></li>
-
+                    <li><a asp-controller="Islem" asp-action="Islem"><i class="fa fa-plus-circle mr-1"></i> Gelir / Gider Ekle</a></li>
+                    <li><a asp-controller="Islemlerim" asp-action="Islemler"><i class="fa fa-list mr-1"></i> Tüm İşlemlerim</a></li>
                 </ul>
             </li>
 
             <li>
-                <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                    <i class="icon icon-plug"></i><span class="nav-text">Eklentiler</span>
-                </a>
-                <ul aria-expanded="false">
-                    <li><a href="~/focus-2/uc-select2.html">Select 2</a></li>
-                    <li><a href="~/focus-2/uc-nestable.html">Nestedable</a></li>
-                    <li><a href="~/focus-2/uc-noui-slider.html">Noui Slider</a></li>
-                    <li><a href="~/focus-2/uc-sweetalert.html">Sweet Alert</a></li>
-                    <li><a href="~/focus-2/uc-toastr.html">Toastr</a></li>
-                    <li><a href="~/focus-2/map-jqvmap.html">Jqv Map</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="widget-basic.html" aria-expanded="false">
-                    <i class="icon icon-globe-2"></i><span class="nav-text">Widget</span>
+                <a asp-controller="Kategori" asp-action="Kategori" aria-expanded="false">
+                    <i class="fa fa-tags"></i><span class="nav-text">Kategori Yönetimi</span>
                 </a>
             </li>
-            <li class="nav-label">Forms</li>
+
+            <li class="nav-label">Bütçe & Planlama</li>
             <li>
                 <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                    <i class="icon icon-form"></i><span class="nav-text">Formlar</span>
+                    <i class="fa fa-bullseye"></i><span class="nav-text">Bütçe Hedefleri</span>
                 </a>
                 <ul aria-expanded="false">
-                    <li><a href="~/focus-2/form-element.html">Form Elements</a></li>
-                    <li><a href="~/focus-2/form-wizard.html">Wizard</a></li>
-                    <li><a href="~/focus-2/form-editor-summernote.html">Summernote</a></li>
-                    <li><a href="form-pickers.html">Pickers</a></li>
-                    <li><a href="form-validation-jquery.html">Jquery Validate</a></li>
-                </ul>
-            </li>
-            <li class="nav-label">Table</li>
-            <li>
-                <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                    <i class="icon icon-layout-25"></i><span class="nav-text">Tablolar</span>
-                </a>
-                <ul aria-expanded="false">
-                    <li><a href="table-bootstrap-basic.html">Bootstrap</a></li>
-                    <li><a href="table-datatable-basic.html">Datatable</a></li>
+                    <li><a asp-controller="ButceHedefleri" asp-action="ButceHedefleri"><i class="fa fa-edit mr-1"></i> Hedef Belirle / Düzenle</a></li>
+                    <li><a asp-controller="ButceHedeflerim" asp-action="ButceHedeflerim"><i class="fa fa-chart-line mr-1"></i> Mevcut Hedef Durumu</a></li>
                 </ul>
             </li>
 
-            <li class="nav-label">Extra</li>
             <li>
-                <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                    <i class="icon icon-single-copy-06"></i><span class="nav-text">Sayfalar</span>
+                <a asp-controller="Takvim" asp-action="Takvim" aria-expanded="false">
+                    <i class="fa fa-calendar-alt"></i><span class="nav-text">Finansal Takvim</span>
                 </a>
-                <ul aria-expanded="false">
-                    <li><a asp-controller="Account" asp-action="Login">Giriş Yap</a></li>
+            </li>
 
-                    <li><a asp-controller="Account" asp-action="Register">Kayıt Ol</a></li>
-
-                    <li>
-                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">Error</a>
-                        <ul aria-expanded="false">
-                            <li><a href="~/focus-2/page-error-400.html">Error 400</a></li>
-                            <li><a href="~/focus-2/page-error-403.html">Error 403</a></li>
-                            <li><a href="~/focus-2/page-error-404.html">Error 404</a></li>
-                            <li><a href="~/focus-2/page-error-500.html">Error 500</a></li>
-                            <li><a href="~/focus-2/page-error-503.html">Error 503</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="~/focus-2/page-lock-screen.html">Kilit Ekran</a></li>
-                </ul>
+            <li class="nav-label">Hesap</li>
+            <li>
+                <a asp-controller="Profile" asp-action="Profile" aria-expanded="false">
+                    <i class="icon icon-single-04"></i><span class="nav-text">Profilim</span>
+                </a>
+            </li>
+            <li>
+                <a asp-controller="Account" asp-action="Logout" aria-expanded="false" class="text-danger">
+                    <i class="fa fa-sign-out-alt text-danger"></i><span class="nav-text text-danger">Çıkış Yap</span>
+                </a>
             </li>
         </ul>
     </div>
-
-
 </div>

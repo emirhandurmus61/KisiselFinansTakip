@@ -1,65 +1,83 @@
-﻿@model KisiselFinansTakip.Models.ViewModels.RegisterViewModel
-
+@model KisiselFinansTakip.Models.ViewModels.RegisterViewModel
 @{
     Layout = null;
 }
+
 <!DOCTYPE html>
-<html lang="en" class="h-100">
+<html lang="tr" class="h-100">
 
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Focus - Finans Takip Admin Paneli </title>
-    <!-- Favicon icon -->
+    <title>Kayıt Ol - Kişisel Finans Takip</title>
     <link rel="icon" type="image/png" sizes="16x16" href="~/focus-2/images/favicon.png">
     <link href="~/focus-2/css/style.css" rel="stylesheet">
-
 </head>
 
 <body class="h-100">
     <div class="authincation h-100">
         <div class="container-fluid h-100">
             <div class="row justify-content-center h-100 align-items-center">
-                <div class="col-md-6">
+                <div class="col-md-5">
                     <div class="authincation-content">
                         <div class="row no-gutters">
                             <div class="col-xl-12">
                                 <div class="auth-form">
-                                    <h4 class="text-center mb-4">Hesabınızı Kaydedin</h4>
+                                    <div class="text-center mb-4">
+                                        <h3 class="text-primary font-weight-bold">💰 FinansTakip</h3>
+                                        <p class="text-muted">Ücretsiz Hesap Oluşturun</p>
+                                    </div>
+                                    <h4 class="text-center mb-4">Kayıt Olun</h4>
+
+                                    @if (!ViewData.ModelState.IsValid)
+                                    {
+                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                            <i class="fa fa-exclamation-triangle mr-1"></i>
+                                            @foreach (var modelState in ViewData.ModelState.Values)
+                                            {
+                                                foreach (var error in modelState.Errors)
+                                                {
+                                                    <span>@error.ErrorMessage</span><br />
+                                                }
+                                            }
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                    }
+
                                     @using (Html.BeginForm("Register", "Account", FormMethod.Post))
                                     {
                                         @Html.AntiForgeryToken()
-                                            <div class="form-group">
+                                        <div class="form-row">
+                                            <div class="form-group col-md-6">
                                                 <label><strong>Ad</strong></label>
-                                                @Html.TextBoxFor(m => m.Ad, new { @class = "form-control" })
-                                                @Html.ValidationMessageFor(m => m.Ad, "", new { @class = "text-danger" })
-
+                                                @Html.TextBoxFor(m => m.Ad, new { @class = "form-control", placeholder = "Adınız", required = "required" })
+                                                @Html.ValidationMessageFor(m => m.Ad, "", new { @class = "text-danger small" })
                                             </div>
-                                            <div class="form-group">
+                                            <div class="form-group col-md-6">
                                                 <label><strong>Soyad</strong></label>
-                                                @Html.TextBoxFor(m => m.Soyad, new { @class = "form-control" })
-                                                @Html.ValidationMessageFor(m => m.Soyad, "", new { @class = "text-danger" })
-
+                                                @Html.TextBoxFor(m => m.Soyad, new { @class = "form-control", placeholder = "Soyadınız", required = "required" })
+                                                @Html.ValidationMessageFor(m => m.Soyad, "", new { @class = "text-danger small" })
                                             </div>
-                                            <div class="form-group">
-                                                <label><strong>Email</strong></label>
-                                                @Html.TextBoxFor(m => m.Email, new { @class = "form-control", type = "email" })
-                                                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
-                                            </div>
-                                            <div class="form-group">
-                                                <label><strong>Şifre</strong></label>
-                                                @Html.PasswordFor(m => m.Sifre, new { @class = "form-control" })
-                                                @Html.ValidationMessageFor(m => m.Sifre, "", new { @class = "text-danger" })
-                                            </div>
-                                            <div class="text-center mt-4">
-                                                <button type="submit" class="btn btn-primary btn-block">Beni Kaydet</button>
-                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label><strong>E-posta Adresi</strong></label>
+                                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", type = "email", placeholder = "ornek@email.com", required = "required" })
+                                            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger small" })
+                                        </div>
+                                        <div class="form-group">
+                                            <label><strong>Şifre</strong></label>
+                                            @Html.PasswordFor(m => m.Sifre, new { @class = "form-control", placeholder = "En az 4 karakter", required = "required" })
+                                            @Html.ValidationMessageFor(m => m.Sifre, "", new { @class = "text-danger small" })
+                                        </div>
+                                        <div class="text-center mt-4">
+                                            <button type="submit" class="btn btn-primary btn-block font-weight-bold">Hesap Oluştur</button>
+                                        </div>
                                     }
-                                    <div class="new-account mt-3">
-                                        <p>
-                                            Zaten bir hesabınız var mı? <a class="text-primary" asp-controller="Account" asp-action="Login">Giriş Yap</a>
-                                        </p>
+                                    <div class="new-account mt-4 text-center">
+                                        <p>Zaten bir hesabınız var mı? <a class="text-primary font-weight-bold" asp-controller="Account" asp-action="Login">Giriş Yap</a></p>
                                     </div>
                                 </div>
                             </div>
@@ -70,13 +88,8 @@
         </div>
     </div>
 
-    <!--**********************************
-        Scripts
-    ***********************************-->
-    <!-- Required vendors -->
     <script src="~/focus-2/vendor/global/global.min.js"></script>
     <script src="~/focus-2/js/quixnav-init.js"></script>
-    <!--endRemoveIf(production)-->
+    <script src="~/focus-2/js/custom.min.js"></script>
 </body>
-
 </html>

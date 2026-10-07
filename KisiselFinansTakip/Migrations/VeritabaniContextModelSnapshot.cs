@@ -3,8 +3,8 @@ using System;
 using KisiselFinansTakip.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
@@ -17,32 +17,64 @@ namespace KisiselFinansTakip.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.20")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+                .HasAnnotation("ProductVersion", "8.0.12")
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("KisiselFinansTakip.Models.Siniflar.ButceHedefleri", b =>
+                {
+                    b.Property<int>("HedefID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("HedefID"));
+
+                    b.Property<int>("Ay")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("HedefTutar")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<int>("KategoriID")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("KullaniciID")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Yil")
+                        .HasColumnType("integer");
+
+                    b.HasKey("HedefID");
+
+                    b.HasIndex("KategoriID");
+
+                    b.HasIndex("KullaniciID");
+
+                    b.ToTable("ButceHedefleri");
+                });
 
             modelBuilder.Entity("KisiselFinansTakip.Models.Siniflar.Islem", b =>
                 {
                     b.Property<int>("IslemID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IslemID"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("IslemID"));
 
                     b.Property<string>("Aciklama")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("character varying(100)");
 
                     b.Property<int>("KategoriID")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int>("KullaniciID")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("Tarih")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<decimal>("Tutar")
                         .HasColumnType("decimal(18,2)");
@@ -60,19 +92,19 @@ namespace KisiselFinansTakip.Migrations
                 {
                     b.Property<int>("KategoriID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("KategoriID"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("KategoriID"));
 
                     b.Property<string>("KategoriAdi")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("Tip")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("character varying(20)");
 
                     b.HasKey("KategoriID");
 
@@ -83,41 +115,60 @@ namespace KisiselFinansTakip.Migrations
                 {
                     b.Property<int>("KullaniciID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("KullaniciID"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("KullaniciID"));
 
                     b.Property<string>("Ad")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("character varying(100)");
 
                     b.Property<DateTime>("KayitTarihi")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Rol")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("character varying(20)");
 
                     b.Property<string>("Sifre")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("Soyad")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("character varying(50)");
 
                     b.HasKey("KullaniciID");
 
                     b.ToTable("Kullanicilar");
+                });
+
+            modelBuilder.Entity("KisiselFinansTakip.Models.Siniflar.ButceHedefleri", b =>
+                {
+                    b.HasOne("KisiselFinansTakip.Models.Siniflar.Kategori", "Kategori")
+                        .WithMany()
+                        .HasForeignKey("KategoriID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("KisiselFinansTakip.Models.Siniflar.Kullanici", "Kullanici")
+                        .WithMany()
+                        .HasForeignKey("KullaniciID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Kategori");
+
+                    b.Navigation("Kullanici");
                 });
 
             modelBuilder.Entity("KisiselFinansTakip.Models.Siniflar.Islem", b =>

@@ -12,5 +12,7 @@ namespace KisiselFinansTakip.Data
 		public DbSet<Kullanici> Kullanicilar { get; set; }
 		public DbSet<Kategori> Kategoriler { get; set; }
 		public DbSet<Islem> Islemler { get; set; }
-	}
+        public DbSet<ButceHedefleri> ButceHedefleri { get; set; }
+
+    }
 }

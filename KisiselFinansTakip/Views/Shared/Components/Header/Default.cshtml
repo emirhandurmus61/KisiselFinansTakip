@@ -1,101 +1,43 @@
-﻿<div class="header">
+@{
+    var kullaniciAdi = Context.Session.GetString("KullaniciAdi") ?? "Kullanıcı";
+    var email = Context.Session.GetString("Email") ?? "";
+    var turkceKultur = new System.Globalization.CultureInfo("tr-TR");
+}
+
+<div class="header">
     <div class="header-content">
         <nav class="navbar navbar-expand">
             <div class="collapse navbar-collapse justify-content-between">
                 <div class="header-left">
-                    <div class="search_bar dropdown">
-                        <span class="search_icon p-3 c-pointer" data-toggle="dropdown">
-                            <i class="mdi mdi-magnify"></i>
-                        </span>
-                        <div class="dropdown-menu p-0 m-0">
-                            <form>
-                                <input class="form-control" type="search" placeholder="Search" aria-label="Search">
-                            </form>
-                        </div>
-                    </div>
+                    <span class="badge badge-primary px-3 py-2 font-weight-bold" style="font-size: 13px;">
+                        <i class="fa fa-calendar-alt mr-1"></i> @DateTime.Now.ToString("dd MMMM yyyy, dddd", turkceKultur)
+                    </span>
                 </div>
 
                 <ul class="navbar-nav header-right">
-                    <li class="nav-item dropdown notification_dropdown">
-                        <a class="nav-link" href="#" role="button" data-toggle="dropdown">
-                            <i class="mdi mdi-bell"></i>
-                            <div class="pulse-css"></div>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right">
-                            <ul class="list-unstyled">
-                                <li class="media dropdown-item">
-                                    <span class="success"><i class="ti-user"></i></span>
-                                    <div class="media-body">
-                                        <a href="#">
-                                            <p>
-                                                <strong>Martin</strong> has added a <strong>customer</strong> Successfully
-                                            </p>
-                                        </a>
-                                    </div>
-                                    <span class="notify-time">3:20 am</span>
-                                </li>
-                                <li class="media dropdown-item">
-                                    <span class="primary"><i class="ti-shopping-cart"></i></span>
-                                    <div class="media-body">
-                                        <a href="#">
-                                            <p><strong>Jennifer</strong> purchased Light Dashboard 2.0.</p>
-                                        </a>
-                                    </div>
-                                    <span class="notify-time">3:20 am</span>
-                                </li>
-                                <li class="media dropdown-item">
-                                    <span class="danger"><i class="ti-bookmark"></i></span>
-                                    <div class="media-body">
-                                        <a href="#">
-                                            <p>
-                                                <strong>Robin</strong> marked a <strong>ticket</strong> as unsolved.
-                                            </p>
-                                        </a>
-                                    </div>
-                                    <span class="notify-time">3:20 am</span>
-                                </li>
-                                <li class="media dropdown-item">
-                                    <span class="primary"><i class="ti-heart"></i></span>
-                                    <div class="media-body">
-                                        <a href="#">
-                                            <p><strong>David</strong> purchased Light Dashboard 1.0.</p>
-                                        </a>
-                                    </div>
-                                    <span class="notify-time">3:20 am</span>
-                                </li>
-                                <li class="media dropdown-item">
-                                    <span class="success"><i class="ti-image"></i></span>
-                                    <div class="media-body">
-                                        <a href="#">
-                                            <p>
-                                                <strong> James.</strong> has added a<strong>customer</strong> Successfully
-                                            </p>
-                                        </a>
-                                    </div>
-                                    <span class="notify-time">3:20 am</span>
-                                </li>
-                            </ul>
-                            <a class="all-notification" href="#">
-                                See all notifications <i class="ti-arrow-right"></i>
-                            </a>
-                        </div>
-                    </li>
                     <li class="nav-item dropdown header-profile">
-                        <a class="nav-link" href="#" role="button" data-toggle="dropdown">
-                            <i class="mdi mdi-account"></i>
+                        <a class="nav-link d-flex align-items-center" href="#" role="button" data-toggle="dropdown">
+                            <i class="fa fa-user-circle text-primary" style="font-size: 26px;"></i>
+                            <span class="ml-2 font-weight-bold text-dark d-none d-md-inline">@kullaniciAdi</span>
+                            <i class="fa fa-angle-down ml-1 text-muted"></i>
                         </a>
-                        <div class="dropdown-menu dropdown-menu-right">
-                            <a href="~/focus-2/app-profile.html" class="dropdown-item">
-                                <i class="icon-user"></i>
-                                <span class="ml-2">Profile </span>
+                        <div class="dropdown-menu dropdown-menu-right shadow">
+                            <div class="dropdown-header text-center border-bottom pb-2 mb-2">
+                                <strong class="d-block text-dark">@kullaniciAdi</strong>
+                                <small class="text-muted">@email</small>
+                            </div>
+                            <a asp-controller="Profile" asp-action="Profile" class="dropdown-item">
+                                <i class="fa fa-user text-primary mr-2"></i> Profilim
                             </a>
-                            <a href="~/focus-2/email-inbox.html" class="dropdown-item">
-                                <i class="icon-envelope-open"></i>
-                                <span class="ml-2">Inbox </span>
+                            <a asp-controller="Islemlerim" asp-action="Islemler" class="dropdown-item">
+                                <i class="fa fa-exchange-alt text-info mr-2"></i> Hareketlerim
                             </a>
-                            <a href="~/focus-2/page-login.html" class="dropdown-item">
-                                <i class="icon-key"></i>
-                                <span class="ml-2">Logout </span>
+                            <a asp-controller="ButceHedeflerim" asp-action="ButceHedeflerim" class="dropdown-item">
+                                <i class="fa fa-bullseye text-warning mr-2"></i> Bütçe Hedeflerim
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a asp-controller="Account" asp-action="Logout" class="dropdown-item text-danger">
+                                <i class="fa fa-sign-out-alt text-danger mr-2"></i> Çıkış Yap
                             </a>
                         </div>
                     </li>
@@ -104,4 +46,3 @@
         </nav>
     </div>
 </div>
-

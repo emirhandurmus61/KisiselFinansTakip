@@ -20,5 +20,6 @@ namespace KisiselFinansTakip.Models.Siniflar
 		public int KullaniciID { get; set; }
 		[ForeignKey("KullaniciID")]
 		public virtual Kullanici Kullanici { get; set; }
-	}
+   
+    }
 }

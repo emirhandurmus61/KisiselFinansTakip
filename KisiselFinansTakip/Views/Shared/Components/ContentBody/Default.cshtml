@@ -1,607 +1,654 @@
-﻿<div class="content-body">
-    <!-- row -->
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-lg-3 col-sm-6">
-                <div class="card">
-                    <div class="stat-widget-two card-body">
-                        <div class="stat-content">
-                            <div class="stat-text">Today Expenses </div>
-                            <div class="stat-digit"> <i class="fa fa-usd"></i>8500</div>
-                        </div>
-                        <div class="progress">
-                            <div class="progress-bar progress-bar-success w-85" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-sm-6">
-                <div class="card">
-                    <div class="stat-widget-two card-body">
-                        <div class="stat-content">
-                            <div class="stat-text">Income Detail</div>
-                            <div class="stat-digit"> <i class="fa fa-usd"></i>7800</div>
-                        </div>
-                        <div class="progress">
-                            <div class="progress-bar progress-bar-primary w-75" role="progressbar" aria-valuenow="78" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-sm-6">
-                <div class="card">
-                    <div class="stat-widget-two card-body">
-                        <div class="stat-content">
-                            <div class="stat-text">Task Completed</div>
-                            <div class="stat-digit"> <i class="fa fa-usd"></i> 500</div>
-                        </div>
-                        <div class="progress">
-                            <div class="progress-bar progress-bar-warning w-50" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-sm-6">
-                <div class="card">
-                    <div class="stat-widget-two card-body">
-                        <div class="stat-content">
-                            <div class="stat-text">Task Completed</div>
-                            <div class="stat-digit"> <i class="fa fa-usd"></i>650</div>
-                        </div>
-                        <div class="progress">
-                            <div class="progress-bar progress-bar-danger w-65" role="progressbar" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                    </div>
-                </div>
-                <!-- /# card -->
-            </div>
-            <!-- /# column -->
+@using KisiselFinansTakip.Models.Siniflar
+
+@{
+    decimal genelToplamGelir = ViewBag.GenelToplamGelir ?? 0m;
+    decimal genelToplamGider = ViewBag.GenelToplamGider ?? 0m;
+    decimal netBakiye = ViewBag.NetBakiye ?? 0m;
+
+    decimal buAyGelir = ViewBag.BuAyGelir ?? 0m;
+    decimal buAyGider = ViewBag.BuAyGider ?? 0m;
+    decimal buAyNet = ViewBag.BuAyNet ?? 0m;
+
+    decimal yillikToplamGelir = ViewBag.YillikToplamGelir ?? 0m;
+    decimal yillikToplamGider = ViewBag.YillikToplamGider ?? 0m;
+    decimal yillikNetBirikim = ViewBag.YillikNetBirikim ?? 0m;
+    decimal aylikOrtalamaGelir = ViewBag.AylikOrtalamaGelir ?? 0m;
+    decimal aylikOrtalamaGider = ViewBag.AylikOrtalamaGider ?? 0m;
+    int ortalamaTasarrufYuzdesi = ViewBag.OrtalamaTasarrufYuzdesi ?? 0;
+    string enCokHarcamaKategori = ViewBag.EnCokHarcamaKategori ?? "Kira";
+    decimal enCokHarcamaTutar = ViewBag.EnCokHarcamaTutar ?? 0m;
+
+    var sonIslemler = ViewBag.SonIslemler as List<Islem> ?? new List<Islem>();
+    var buAyGiderKategorileri = ViewBag.BuAyGiderKategorileri as IEnumerable<dynamic> ?? new List<dynamic>();
+    var butceHedefleri = ViewBag.ButceHedefleriDetay as IEnumerable<dynamic> ?? new List<dynamic>();
+    var aylikTabloVerisi = ViewBag.AylikTabloVerisi as IEnumerable<dynamic> ?? new List<dynamic>();
+
+    string aylar12Json = ViewBag.Aylar12Json ?? "[]";
+    string gelirler12Json = ViewBag.Gelirler12Json ?? "[]";
+    string giderler12Json = ViewBag.Giderler12Json ?? "[]";
+    string tasarruflar12Json = ViewBag.Tasarruflar12Json ?? "[]";
+    string yillikGiderKategoriAdlariJson = ViewBag.YillikGiderKategoriAdlariJson ?? "[]";
+    string yillikGiderKategoriTutarlariJson = ViewBag.YillikGiderKategoriTutarlariJson ?? "[]";
+}
+
+<!-- Sayfa Başlığı ve Aksiyon Butonları -->
+<div class="row page-titles mx-0 align-items-center mb-4">
+    <div class="col-sm-7 p-md-0">
+        <div class="welcome-text">
+            <h3 class="font-weight-bold text-primary mb-1">
+                <i class="fa fa-chart-line mr-2"></i> Finansal Analitik & Genel Bakış
+            </h3>
+            <p class="mb-0 text-muted">Son 1 yıllık gelir-gider trendiniz, bütçe hedefleriniz ve nakit akışı raporlarınız</p>
         </div>
-        <div class="row">
-            <div class="col-xl-8 col-lg-8 col-md-8">
-                <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title">Sales Overview</h4>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-xl-12 col-lg-8">
-                                <div id="morris-bar-chart"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-4 col-lg-4 col-md-4">
-                <div class="card">
-                    <div class="card-body text-center">
-                        <div class="m-t-10">
-                            <h4 class="card-title">Customer Feedback</h4>
-                            <h2 class="mt-3">385749</h2>
-                        </div>
-                        <div class="widget-card-circle mt-5 mb-5" id="info-circle-card">
-                            <i class="ti-control-shuffle pa"></i>
-                        </div>
-                        <ul class="widget-line-list m-b-15">
-                            <li class="border-right">
-                                92% <br><span class="text-success">
-                                    <i class="ti-hand-point-up"></i> Positive
-                                </span>
-                            </li>
-                            <li>
-                                8% <br><span class="text-danger">
-                                    <i class="ti-hand-point-down"></i>Negative
-                                </span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-4">
-                <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title">Project</h4>
-                    </div>
-                    <div class="card-body">
-                        <div class="current-progress">
-                            <div class="progress-content py-2">
-                                <div class="row">
-                                    <div class="col-lg-4">
-                                        <div class="progress-text">Website</div>
-                                    </div>
-                                    <div class="col-lg-8">
-                                        <div class="current-progressbar">
-                                            <div class="progress">
-                                                <div class="progress-bar progress-bar-primary w-40" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">
-                                                    40%
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="progress-content py-2">
-                                <div class="row">
-                                    <div class="col-lg-4">
-                                        <div class="progress-text">Android</div>
-                                    </div>
-                                    <div class="col-lg-8">
-                                        <div class="current-progressbar">
-                                            <div class="progress">
-                                                <div class="progress-bar progress-bar-primary w-60" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">
-                                                    60%
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="progress-content py-2">
-                                <div class="row">
-                                    <div class="col-lg-4">
-                                        <div class="progress-text">Ios</div>
-                                    </div>
-                                    <div class="col-lg-8">
-                                        <div class="current-progressbar">
-                                            <div class="progress">
-                                                <div class="progress-bar progress-bar-primary w-70" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100">
-                                                    70%
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="progress-content py-2">
-                                <div class="row">
-                                    <div class="col-lg-4">
-                                        <div class="progress-text">Mobile</div>
-                                    </div>
-                                    <div class="col-lg-8">
-                                        <div class="current-progressbar">
-                                            <div class="progress">
-                                                <div class="progress-bar progress-bar-primary w-90" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100">
-                                                    90%
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="testimonial-widget-one p-17">
-                            <div class="testimonial-widget-one owl-carousel owl-theme">
-                                <div class="item">
-                                    <div class="testimonial-content">
-                                        <div class="testimonial-text">
-                                            <i class="fa fa-quote-left"></i> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.
-                                            consectetur adipisicing elit.
-                                            <i class="fa fa-quote-right"></i>
-                                        </div>
-                                        <div class="media">
-                                            <div class="media-body">
-                                                <div class="testimonial-author">TYRION LANNISTER</div>
-                                                <div class="testimonial-author-position">
-                                                    Founder-Ceo. Dell Corp
-                                                </div>
-                                            </div>
-                                            <img class="testimonial-author-img ml-3" src="./images/avatar/1.png" alt="" />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="item">
-                                    <div class="testimonial-content">
-                                        <div class="testimonial-text">
-                                            <i class="fa fa-quote-left"></i> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.
-                                            consectetur adipisicing elit.
-                                            <i class="fa fa-quote-right"></i>
-                                        </div>
-                                        <div class="media">
-                                            <div class="media-body">
-                                                <div class="testimonial-author">TYRION LANNISTER</div>
-                                                <div class="testimonial-author-position">
-                                                    Founder-Ceo. Dell Corp
-                                                </div>
-                                            </div>
-                                            <img class="testimonial-author-img ml-3" src="./images/avatar/1.png" alt="" />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="item">
-                                    <div class="testimonial-content">
-                                        <div class="testimonial-text">
-                                            <i class="fa fa-quote-left"></i> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.
-                                            consectetur adipisicing elit.
-                                            <i class="fa fa-quote-right"></i>
-                                        </div>
-                                        <div class="media">
-                                            <div class="media-body">
-                                                <div class="testimonial-author">TYRION LANNISTER</div>
-                                                <div class="testimonial-author-position">
-                                                    Founder-Ceo. Dell Corp
-                                                </div>
-                                            </div>
-                                            <img class="testimonial-author-img ml-3" src="./images/avatar/1.png" alt="" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title">Web Server</h4>
-                    </div>
-                    <div class="card-body">
-                        <div class="cpu-load-chart">
-                            <div id="cpu-load" class="cpu-load"></div>
-                        </div>
-                    </div>
-                </div>
-                <!-- /# card -->
-            </div>
-            <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title">Country</h4>
-                    </div>
-                    <div class="card-body">
-                        <div id="vmap13" class="vmap"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title">New Orders</h4>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table mb-0">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Name</th>
-                                        <th>Product</th>
-                                        <th>quantity</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <div class="round-img">
-                                                <a href=""><img width="35" src="./images/avatar/1.png" alt=""></a>
-                                            </div>
-                                        </td>
-                                        <td>Lew Shawon</td>
-                                        <td><span>Dell-985</span></td>
-                                        <td><span>456 pcs</span></td>
-                                        <td><span class="badge badge-success">Done</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="round-img">
-                                                <a href=""><img width="35" src="./images/avatar/1.png" alt=""></a>
-                                            </div>
-                                        </td>
-                                        <td>Lew Shawon</td>
-                                        <td><span>Asus-565</span></td>
-                                        <td><span>456 pcs</span></td>
-                                        <td><span class="badge badge-warning">Pending</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="round-img">
-                                                <a href=""><img width="35" src="./images/avatar/1.png" alt=""></a>
-                                            </div>
-                                        </td>
-                                        <td>lew Shawon</td>
-                                        <td><span>Dell-985</span></td>
-                                        <td><span>456 pcs</span></td>
-                                        <td><span class="badge badge-success">Done</span></td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>
-                                            <div class="round-img">
-                                                <a href=""><img width="35" src="./images/avatar/1.png" alt=""></a>
-                                            </div>
-                                        </td>
-                                        <td>Lew Shawon</td>
-                                        <td><span>Asus-565</span></td>
-                                        <td><span>456 pcs</span></td>
-                                        <td><span class="badge badge-warning">Pending</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="round-img">
-                                                <a href=""><img width="35" src="./images/avatar/1.png" alt=""></a>
-                                            </div>
-                                        </td>
-                                        <td>lew Shawon</td>
-                                        <td><span>Dell-985</span></td>
-                                        <td><span>456 pcs</span></td>
-                                        <td><span class="badge badge-success">Done</span></td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>
-                                            <div class="round-img">
-                                                <a href=""><img width="35" src="./images/avatar/1.png" alt=""></a>
-                                            </div>
-                                        </td>
-                                        <td>Lew Shawon</td>
-                                        <td><span>Asus-565</span></td>
-                                        <td><span>456 pcs</span></td>
-                                        <td><span class="badge badge-warning">Pending</span></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-6 col-xl-4 col-xxl-6 col-md-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title">Timeline</h4>
-                    </div>
-                    <div class="card-body">
-                        <div class="widget-timeline">
-                            <ul class="timeline">
-                                <li>
-                                    <div class="timeline-badge primary"></div>
-                                    <a class="timeline-panel text-muted" href="#">
-                                        <span>10 minutes ago</span>
-                                        <h6 class="m-t-5">Youtube, a video-sharing website, goes live.</h6>
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <div class="timeline-badge warning">
-                                    </div>
-                                    <a class="timeline-panel text-muted" href="#">
-                                        <span>20 minutes ago</span>
-                                        <h6 class="m-t-5">Mashable, a news website and blog, goes live.</h6>
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <div class="timeline-badge danger">
-                                    </div>
-                                    <a class="timeline-panel text-muted" href="#">
-                                        <span>30 minutes ago</span>
-                                        <h6 class="m-t-5">Google acquires Youtube.</h6>
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <div class="timeline-badge success">
-                                    </div>
-                                    <a class="timeline-panel text-muted" href="#">
-                                        <span>15 minutes ago</span>
-                                        <h6 class="m-t-5">StumbleUpon is acquired by eBay. </h6>
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <div class="timeline-badge warning">
-                                    </div>
-                                    <a class="timeline-panel text-muted" href="#">
-                                        <span>20 minutes ago</span>
-                                        <h6 class="m-t-5">Mashable, a news website and blog, goes live.</h6>
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <div class="timeline-badge dark">
-                                    </div>
-                                    <a class="timeline-panel text-muted" href="#">
-                                        <span>20 minutes ago</span>
-                                        <h6 class="m-t-5">Mashable, a news website and blog, goes live.</h6>
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <div class="timeline-badge info">
-                                    </div>
-                                    <a class="timeline-panel text-muted" href="#">
-                                        <span>30 minutes ago</span>
-                                        <h6 class="m-t-5">Google acquires Youtube.</h6>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-4 col-xxl-6 col-lg-6 col-md-6 col-sm-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title">Todo</h4>
-                    </div>
-                    <div class="card-body px-0">
-                        <div class="todo-list">
-                            <div class="tdl-holder">
-                                <div class="tdl-content widget-todo mr-4">
-                                    <ul id="todo_list">
-                                        <li>
-                                            <label>
-                                                <input type="checkbox"><i></i><span>Get up</span><a href='#'
-                                                                                                    class="ti-trash"></a>
-                                            </label>
-                                        </li>
-                                        <li>
-                                            <label>
-                                                <input type="checkbox" checked><i></i><span>Stand up</span><a href='#' class="ti-trash"></a>
-                                            </label>
-                                        </li>
-                                        <li>
-                                            <label>
-                                                <input type="checkbox"><i></i><span>
-                                                    Don't give up the
-                                                    fight.
-                                                </span><a href='#' class="ti-trash"></a>
-                                            </label>
-                                        </li>
-                                        <li>
-                                            <label>
-                                                <input type="checkbox" checked><i></i><span>
-                                                    Do something
-                                                    else
-                                                </span><a href='#' class="ti-trash"></a>
-                                            </label>
-                                        </li>
-                                        <li>
-                                            <label>
-                                                <input type="checkbox" checked><i></i><span>Stand up</span><a href='#' class="ti-trash"></a>
-                                            </label>
-                                        </li>
-                                        <li>
-                                            <label>
-                                                <input type="checkbox"><i></i><span>
-                                                    Don't give up the
-                                                    fight.
-                                                </span><a href='#' class="ti-trash"></a>
-                                            </label>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="px-4">
-                                    <input type="text" class="tdl-new form-control" placeholder="Write new item and hit 'Enter'...">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-12 col-md-12 col-xxl-6 col-xl-4 col-lg-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title">Product Sold</h4>
-                        <div class="card-action">
-                            <div class="dropdown custom-dropdown">
-                                <div data-toggle="dropdown">
-                                    <i class="ti-more-alt"></i>
-                                </div>
-                                <div class="dropdown-menu dropdown-menu-right">
-                                    <a class="dropdown-item" href="#">Option 1</a>
-                                    <a class="dropdown-item" href="#">Option 2</a>
-                                    <a class="dropdown-item" href="#">Option 3</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="chart py-4">
-                            <canvas id="sold-product"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-12 col-xxl-6 col-lg-6 col-md-12">
-                <div class="row">
-                    <div class="col-xl-3 col-lg-6 col-sm-6 col-xxl-6 col-md-6">
-                        <div class="card">
-                            <div class="social-graph-wrapper widget-facebook">
-                                <span class="s-icon"><i class="fa fa-facebook"></i></span>
-                            </div>
-                            <div class="row">
-                                <div class="col-6 border-right">
-                                    <div class="pt-3 pb-3 pl-0 pr-0 text-center">
-                                        <h4 class="m-1"><span class="counter">89</span> k</h4>
-                                        <p class="m-0">Friends</p>
-                                    </div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="pt-3 pb-3 pl-0 pr-0 text-center">
-                                        <h4 class="m-1"><span class="counter">119</span> k</h4>
-                                        <p class="m-0">Followers</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-lg-6 col-sm-6 col-xxl-6 col-md-6">
-                        <div class="card">
-                            <div class="social-graph-wrapper widget-linkedin">
-                                <span class="s-icon"><i class="fa fa-linkedin"></i></span>
-                            </div>
-                            <div class="row">
-                                <div class="col-6 border-right">
-                                    <div class="pt-3 pb-3 pl-0 pr-0 text-center">
-                                        <h4 class="m-1"><span class="counter">89</span> k</h4>
-                                        <p class="m-0">Friends</p>
-                                    </div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="pt-3 pb-3 pl-0 pr-0 text-center">
-                                        <h4 class="m-1"><span class="counter">119</span> k</h4>
-                                        <p class="m-0">Followers</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-lg-6 col-sm-6 col-xxl-6 col-md-6">
-                        <div class="card">
-                            <div class="social-graph-wrapper widget-googleplus">
-                                <span class="s-icon"><i class="fa fa-google-plus"></i></span>
-                            </div>
-                            <div class="row">
-                                <div class="col-6 border-right">
-                                    <div class="pt-3 pb-3 pl-0 pr-0 text-center">
-                                        <h4 class="m-1"><span class="counter">89</span> k</h4>
-                                        <p class="m-0">Friends</p>
-                                    </div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="pt-3 pb-3 pl-0 pr-0 text-center">
-                                        <h4 class="m-1"><span class="counter">119</span> k</h4>
-                                        <p class="m-0">Followers</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-lg-6 col-sm-6 col-xxl-6 col-md-6">
-                        <div class="card">
-                            <div class="social-graph-wrapper widget-twitter">
-                                <span class="s-icon"><i class="fa fa-twitter"></i></span>
-                            </div>
-                            <div class="row">
-                                <div class="col-6 border-right">
-                                    <div class="pt-3 pb-3 pl-0 pr-0 text-center">
-                                        <h4 class="m-1"><span class="counter">89</span> k</h4>
-                                        <p class="m-0">Friends</p>
-                                    </div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="pt-3 pb-3 pl-0 pr-0 text-center">
-                                        <h4 class="m-1"><span class="counter">119</span> k</h4>
-                                        <p class="m-0">Followers</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+    </div>
+    <div class="col-sm-5 p-md-0 justify-content-sm-end mt-3 mt-sm-0 d-flex">
+        <a asp-controller="Islem" asp-action="Islem" class="btn btn-primary mr-2 shadow font-weight-bold">
+            <i class="fa fa-plus-circle mr-1"></i> Yeni İşlem Ekle
+        </a>
+        <a asp-controller="ButceHedefleri" asp-action="ButceHedefleri" class="btn btn-outline-primary shadow-sm font-weight-bold">
+            <i class="fa fa-bullseye mr-1"></i> Hedef Belirle
+        </a>
     </div>
 </div>
+
+<!-- 1. BÖLÜM: Bu Ay ve Kasa Durumu (4 Ana Widget) -->
+<div class="row mb-3">
+    <!-- Net Kasa Bakiyesi -->
+    <div class="col-xl-3 col-lg-6 col-sm-6 mb-3">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body">
+                <div class="stat-widget-one">
+                    <div class="stat-icon">
+                        <i class="fa fa-wallet @(netBakiye >= 0 ? "text-success border-success" : "text-danger border-danger")"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-text">Net Kasa Bakiyesi</div>
+                        <div class="stat-digit @(netBakiye >= 0 ? "text-success" : "text-danger")">
+                            @netBakiye.ToString("N2") ₺
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bu Ay Gelir -->
+    <div class="col-xl-3 col-lg-6 col-sm-6 mb-3">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body">
+                <div class="stat-widget-one">
+                    <div class="stat-icon">
+                        <i class="fa fa-arrow-down text-success border-success"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-text">Bu Ayki Gelir</div>
+                        <div class="stat-digit text-success">
+                            +@buAyGelir.ToString("N2") ₺
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bu Ay Gider -->
+    <div class="col-xl-3 col-lg-6 col-sm-6 mb-3">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body">
+                <div class="stat-widget-one">
+                    <div class="stat-icon">
+                        <i class="fa fa-arrow-up text-danger border-danger"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-text">Bu Ayki Gider</div>
+                        <div class="stat-digit text-danger">
+                            -@buAyGider.ToString("N2") ₺
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bu Ay Net Tasarruf -->
+    <div class="col-xl-3 col-lg-6 col-sm-6 mb-3">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body">
+                <div class="stat-widget-one">
+                    <div class="stat-icon">
+                        <i class="fa fa-piggy-bank @(buAyNet >= 0 ? "text-info border-info" : "text-warning border-warning")"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-text">Bu Ayki Tasarruf</div>
+                        <div class="stat-digit @(buAyNet >= 0 ? "text-info" : "text-warning")">
+                            @buAyNet.ToString("N2") ₺
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 2. BÖLÜM: Yıllık Finansal Göstergeler (KPI Şeridi) -->
+<div class="row mb-4">
+    <div class="col-xl-3 col-md-6 mb-2">
+        <div class="card bg-primary text-white shadow-sm border-0 py-2">
+            <div class="card-body py-2 px-3 d-flex justify-content-between align-items-center">
+                <div>
+                    <small class="text-white-50 text-uppercase font-weight-bold">1 Yıllık Toplam Gelir</small>
+                    <h4 class="text-white font-weight-bold mb-0">@yillikToplamGelir.ToString("N2") ₺</h4>
+                </div>
+                <i class="fa fa-calendar-check fa-2x text-white-50"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-2">
+        <div class="card bg-danger text-white shadow-sm border-0 py-2">
+            <div class="card-body py-2 px-3 d-flex justify-content-between align-items-center">
+                <div>
+                    <small class="text-white-50 text-uppercase font-weight-bold">1 Yıllık Toplam Gider</small>
+                    <h4 class="text-white font-weight-bold mb-0">@yillikToplamGider.ToString("N2") ₺</h4>
+                </div>
+                <i class="fa fa-shopping-cart fa-2x text-white-50"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-2">
+        <div class="card bg-success text-white shadow-sm border-0 py-2">
+            <div class="card-body py-2 px-3 d-flex justify-content-between align-items-center">
+                <div>
+                    <small class="text-white-50 text-uppercase font-weight-bold">1 Yıllık Net Birikim</small>
+                    <h4 class="text-white font-weight-bold mb-0">+@yillikNetBirikim.ToString("N2") ₺</h4>
+                </div>
+                <i class="fa fa-vault fa-2x text-white-50"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-2">
+        <div class="card bg-info text-white shadow-sm border-0 py-2">
+            <div class="card-body py-2 px-3 d-flex justify-content-between align-items-center">
+                <div>
+                    <small class="text-white-50 text-uppercase font-weight-bold">Ortalama Tasarruf Oranı</small>
+                    <h4 class="text-white font-weight-bold mb-0">%@ortalamaTasarrufYuzdesi</h4>
+                </div>
+                <i class="fa fa-percentage fa-2x text-white-50"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 3. BÖLÜM: BÜYÜK GRAFİK - Son 1 Yıl Gelir / Gider Karşılaştırması -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-header border-bottom d-flex flex-wrap justify-content-between align-items-center">
+                <div>
+                    <h5 class="card-title font-weight-bold text-dark m-0">
+                        <i class="fa fa-chart-bar text-primary mr-2"></i> Son 1 Yılın Gelir - Gider & Net Tasarruf Analizi
+                    </h5>
+                    <small class="text-muted">Aylık bazda gelirleriniz, harcamalarınız ve net nakit akışı eğrisi (Son 12 Ay)</small>
+                </div>
+                <div class="d-flex align-items-center mt-2 mt-md-0">
+                    <span class="badge badge-success mr-2 px-3 py-2 font-weight-bold">
+                        <i class="fa fa-square mr-1"></i> Gelir
+                    </span>
+                    <span class="badge badge-danger mr-2 px-3 py-2 font-weight-bold">
+                        <i class="fa fa-square mr-1"></i> Gider
+                    </span>
+                    <span class="badge badge-primary px-3 py-2 font-weight-bold">
+                        <i class="fa fa-minus mr-1"></i> Net Tasarruf
+                    </span>
+                </div>
+            </div>
+            <div class="card-body">
+                <div style="position: relative; height: 380px; width: 100%;">
+                    <canvas id="yillikGelirGiderChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 4. BÖLÜM: Kategori Dağılımı ve Aylık Trend Çizgisi -->
+<div class="row mb-4">
+    <!-- Son 1 Yıl Gider Kategorileri Donut Grafiği -->
+    <div class="col-xl-6 col-lg-6 mb-3">
+        <div class="card shadow-sm h-100">
+            <div class="card-header border-bottom">
+                <h5 class="card-title font-weight-bold text-dark m-0">
+                    <i class="fa fa-pie-chart text-danger mr-2"></i> 1 Yıllık Harcama Kategorileri Dağılımı
+                </h5>
+                <small class="text-muted">Harcamalarınızın kategorilere göre oransal paylaşımı</small>
+            </div>
+            <div class="card-body d-flex flex-column justify-content-center align-items-center">
+                <div style="position: relative; height: 300px; width: 100%;">
+                    <canvas id="kategoriDonutChart"></canvas>
+                </div>
+                <div class="mt-3 text-center">
+                    <span class="text-muted small">En çok harcanan kategori:</span>
+                    <strong class="text-danger">@enCokHarcamaKategori (@enCokHarcamaTutar.ToString("N2") ₺)</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Aylık Net Birikim / Tasarruf Trendi (Line Area) -->
+    <div class="col-xl-6 col-lg-6 mb-3">
+        <div class="card shadow-sm h-100">
+            <div class="card-header border-bottom">
+                <h5 class="card-title font-weight-bold text-dark m-0">
+                    <i class="fa fa-wave-square text-info mr-2"></i> Aylık Net Birikim Eğilimi (Nakit Akışı)
+                </h5>
+                <small class="text-muted">Her ay cebinizde kalan net tasarruf miktarı değişimi</small>
+            </div>
+            <div class="card-body">
+                <div style="position: relative; height: 300px; width: 100%;">
+                    <canvas id="tasarrufTrendChart"></canvas>
+                </div>
+                <div class="d-flex justify-content-around mt-3 border-top pt-2 text-center">
+                    <div>
+                        <small class="text-muted d-block">Aylık Ort. Gelir</small>
+                        <strong class="text-success">@aylikOrtalamaGelir.ToString("N2") ₺</strong>
+                    </div>
+                    <div>
+                        <small class="text-muted d-block">Aylık Ort. Gider</small>
+                        <strong class="text-danger">@aylikOrtalamaGider.ToString("N2") ₺</strong>
+                    </div>
+                    <div>
+                        <small class="text-muted d-block">Ortalama Tasarruf</small>
+                        <strong class="text-primary">%@ortalamaTasarrufYuzdesi</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 5. BÖLÜM: Bu Ayın Harcama Dağılımı & Bütçe Hedefleri -->
+<div class="row mb-4">
+    <!-- Bu Ay Harcama Dağılımı -->
+    <div class="col-xl-6 col-lg-6 mb-3">
+        <div class="card shadow-sm h-100">
+            <div class="card-header border-bottom d-flex justify-content-between align-items-center">
+                <h5 class="card-title font-weight-bold text-dark m-0">
+                    <i class="fa fa-tags text-warning mr-2"></i> Bu Ayki Harcama Detayları
+                </h5>
+                <span class="badge badge-danger font-weight-bold">Toplam: @buAyGider.ToString("N2") ₺</span>
+            </div>
+            <div class="card-body">
+                @if (buAyGiderKategorileri.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Kategori</th>
+                                    <th>Harcama</th>
+                                    <th style="width: 45%;">Oran</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in buAyGiderKategorileri)
+                                {
+                                    <tr>
+                                        <td class="font-weight-bold text-dark">@item.KategoriAdi</td>
+                                        <td class="text-danger font-weight-bold">@(((decimal)item.ToplamTutar).ToString("N2")) ₺</td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="progress flex-grow-1" style="height: 10px;">
+                                                    <div class="progress-bar bg-danger" role="progressbar" style="width: @item.Yuzde%;" aria-valuenow="@item.Yuzde" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
+                                                <span class="ml-2 font-weight-bold text-muted small">@item.Yuzde%</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center py-4 text-muted">
+                        <i class="fa fa-info-circle fa-2x mb-2 text-primary"></i>
+                        <p>Bu ay için henüz harcama kaydı bulunmuyor.</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Bu Ayın Bütçe Hedefleri -->
+    <div class="col-xl-6 col-lg-6 mb-3">
+        <div class="card shadow-sm h-100">
+            <div class="card-header border-bottom d-flex justify-content-between align-items-center">
+                <h5 class="card-title font-weight-bold text-dark m-0">
+                    <i class="fa fa-bullseye text-primary mr-2"></i> Bu Ayki Bütçe Hedefleri
+                </h5>
+                <a asp-controller="ButceHedeflerim" asp-action="ButceHedeflerim" class="btn btn-sm btn-outline-primary">Tümünü Yönet</a>
+            </div>
+            <div class="card-body">
+                @if (butceHedefleri.Any())
+                {
+                    @foreach (var hedef in butceHedefleri)
+                    {
+                        var harcanan = (decimal)hedef.Harcama;
+                        var hedefTutar = (decimal)hedef.HedefTutar;
+                        var yuzde = (int)hedef.Yuzde;
+                        var asimVar = harcanan > hedefTutar;
+                        var barColor = asimVar ? "bg-danger" : (yuzde > 80 ? "bg-warning" : "bg-success");
+
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="font-weight-bold text-dark">
+                                    @hedef.KategoriAdi
+                                    @if (asimVar)
+                                    {
+                                        <span class="badge badge-danger ml-1">Limit Aşıldı!</span>
+                                    }
+                                </span>
+                                <span class="small font-weight-bold">
+                                    <span class="@(asimVar ? "text-danger" : "text-dark")">@harcanan.ToString("N2") ₺</span> /
+                                    <span class="text-muted">@hedefTutar.ToString("N2") ₺</span>
+                                    (@yuzde%)
+                                </span>
+                            </div>
+                            <div class="progress" style="height: 12px;">
+                                <div class="progress-bar @barColor progress-bar-striped" role="progressbar" style="width: @Math.Min(yuzde, 100)%;" aria-valuenow="@yuzde" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="text-center py-4 text-muted">
+                        <i class="fa fa-bullseye fa-2x mb-2 text-warning"></i>
+                        <p>Bu ay için tanımlanmış bir bütçe hedefiniz bulunmuyor.</p>
+                        <a asp-controller="ButceHedefleri" asp-action="ButceHedefleri" class="btn btn-sm btn-outline-warning">Yeni Hedef Belirle</a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 6. BÖLÜM: 12 Aylık Karşılaştırmalı Detay Tablosu (Finansal Geçmiş) -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-header border-bottom d-flex justify-content-between align-items-center">
+                <h5 class="card-title font-weight-bold text-dark m-0">
+                    <i class="fa fa-calendar-alt text-primary mr-2"></i> 12 Aylık Karşılaştırmalı Finansal Rapor
+                </h5>
+                <span class="badge badge-light border">Son 12 Ayın Resmi</span>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0 text-center">
+                        <thead class="thead-light">
+                            <tr>
+                                <th class="text-left">Dönem (Ay / Yıl)</th>
+                                <th>İşlem Sayısı</th>
+                                <th class="text-right">Toplam Gelir</th>
+                                <th class="text-right">Toplam Gider</th>
+                                <th class="text-right">Net Kalan (Tasarruf)</th>
+                                <th>Tasarruf Oranı</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var ay in aylikTabloVerisi)
+                            {
+                                bool pozitif = (decimal)ay.NetFark >= 0;
+                                <tr>
+                                    <td class="text-left font-weight-bold text-dark">@ay.AyAdi</td>
+                                    <td><span class="badge badge-light">@ay.IslemSayisi İşlem</span></td>
+                                    <td class="text-right font-weight-bold text-success">+@(((decimal)ay.Gelir).ToString("N2")) ₺</td>
+                                    <td class="text-right font-weight-bold text-danger">-@(((decimal)ay.Gider).ToString("N2")) ₺</td>
+                                    <td class="text-right font-weight-bold @(pozitif ? "text-success" : "text-danger")">
+                                        @(pozitif ? "+" : "")@(((decimal)ay.NetFark).ToString("N2")) ₺
+                                    </td>
+                                    <td>
+                                        <span class="badge @(pozitif ? "badge-success" : "badge-danger") px-2 py-1 font-weight-bold">
+                                            %@ay.TasarrufOrani
+                                        </span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 7. BÖLÜM: Son Eklenen İşlemler -->
+<div class="row">
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-header border-bottom d-flex justify-content-between align-items-center">
+                <h5 class="card-title font-weight-bold text-dark m-0">
+                    <i class="fa fa-history text-info mr-2"></i> Son Finansal Hareketler
+                </h5>
+                <a asp-controller="Islemlerim" asp-action="Islemler" class="btn btn-sm btn-primary">Tümünü İncele</a>
+            </div>
+            <div class="card-body">
+                @if (sonIslemler.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Tarih</th>
+                                    <th>Açıklama</th>
+                                    <th>Kategori</th>
+                                    <th>İşlem Türü</th>
+                                    <th class="text-right">Tutar</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var islem in sonIslemler)
+                                {
+                                    bool isGelir = islem.Kategori?.Tip == "Gelir";
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-calendar-alt text-muted mr-1"></i>
+                                            @islem.Tarih.ToString("dd.MM.yyyy")
+                                        </td>
+                                        <td class="font-weight-bold text-dark">@islem.Aciklama</td>
+                                        <td>
+                                            <span class="badge badge-light border">@islem.Kategori?.KategoriAdi</span>
+                                        </td>
+                                        <td>
+                                            <span class="badge @(isGelir ? "badge-success" : "badge-danger") px-2 py-1">
+                                                @(isGelir ? "Gelir" : "Gider")
+                                            </span>
+                                        </td>
+                                        <td class="text-right font-weight-bold @(isGelir ? "text-success" : "text-danger")" style="font-size: 15px;">
+                                            @(isGelir ? "+" : "-")@islem.Tutar.ToString("N2") ₺
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center py-4 text-muted">
+                        <p class="mb-0">Henüz hiç finansal işlem kaydedilmedi.</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js Script Tanımlamaları -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var aylar12 = @Html.Raw(aylar12Json);
+        var gelirler12 = @Html.Raw(gelirler12Json);
+        var giderler12 = @Html.Raw(giderler12Json);
+        var tasarruflar12 = @Html.Raw(tasarruflar12Json);
+
+        var giderKategoriAdlari = @Html.Raw(yillikGiderKategoriAdlariJson);
+        var giderKategoriTutarlari = @Html.Raw(yillikGiderKategoriTutarlariJson);
+
+        // 1. GRAFİK: 1 Yıllık Gelir - Gider & Net Tasarruf Karşılaştırma Grafiği
+        var ctxBar = document.getElementById("yillikGelirGiderChart");
+        if (ctxBar) {
+            new Chart(ctxBar.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: aylar12,
+                    datasets: [
+                        {
+                            label: 'Toplam Gelir (₺)',
+                            backgroundColor: 'rgba(40, 167, 69, 0.85)',
+                            borderColor: '#28a745',
+                            borderWidth: 1,
+                            data: gelirler12
+                        },
+                        {
+                            label: 'Toplam Gider (₺)',
+                            backgroundColor: 'rgba(220, 53, 69, 0.85)',
+                            borderColor: '#dc3545',
+                            borderWidth: 1,
+                            data: giderler12
+                        },
+                        {
+                            type: 'line',
+                            label: 'Net Tasarruf (₺)',
+                            borderColor: '#593bdb',
+                            backgroundColor: 'rgba(89, 59, 219, 0.08)',
+                            borderWidth: 3,
+                            pointBackgroundColor: '#593bdb',
+                            pointRadius: 4,
+                            fill: false,
+                            data: tasarruflar12
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    legend: {
+                        position: 'top',
+                        labels: { fontColor: '#333', fontSize: 13, usePointStyle: true }
+                    },
+                    tooltips: {
+                        mode: 'index',
+                        intersect: false,
+                        callbacks: {
+                            label: function (tooltipItem, data) {
+                                var label = data.datasets[tooltipItem.datasetIndex].label || '';
+                                return label + ': ' + Number(tooltipItem.yLabel).toLocaleString('tr-TR', { minimumFractionDigits: 2 }) + ' ₺';
+                            }
+                        }
+                    },
+                    scales: {
+                        xAxes: [{
+                            gridLines: { display: false },
+                            ticks: { fontColor: '#666' }
+                        }],
+                        yAxes: [{
+                            gridLines: { color: 'rgba(0,0,0,0.05)' },
+                            ticks: {
+                                fontColor: '#666',
+                                callback: function (value) {
+                                    return value.toLocaleString('tr-TR') + ' ₺';
+                                }
+                            }
+                        }]
+                    }
+                }
+            });
+        }
+
+        // 2. GRAFİK: Kategori Bazlı Gider Dağılımı Donut Grafiği
+        var ctxDonut = document.getElementById("kategoriDonutChart");
+        if (ctxDonut && giderKategoriAdlari.length > 0) {
+            var donutColors = [
+                '#dc3545', '#ffc107', '#17a2b8', '#6f42c1', '#e83e8c',
+                '#fd7e14', '#20c997', '#007bff', '#6c757d', '#28a745'
+            ];
+
+            new Chart(ctxDonut.getContext('2d'), {
+                type: 'doughnut',
+                data: {
+                    labels: giderKategoriAdlari,
+                    datasets: [{
+                        data: giderKategoriTutarlari,
+                        backgroundColor: donutColors.slice(0, giderKategoriAdlari.length),
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    legend: {
+                        position: 'right',
+                        labels: { boxWidth: 15, fontSize: 12, fontColor: '#333' }
+                    },
+                    tooltips: {
+                        callbacks: {
+                            label: function (tooltipItem, data) {
+                                var dataset = data.datasets[tooltipItem.datasetIndex];
+                                var total = dataset.data.reduce(function (prev, cur) { return prev + cur; }, 0);
+                                var current = dataset.data[tooltipItem.index];
+                                var percentage = Math.round((current / total) * 100);
+                                return data.labels[tooltipItem.index] + ': ' + current.toLocaleString('tr-TR') + ' ₺ (' + percentage + '%)';
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // 3. GRAFİK: Aylık Net Birikim Eğilimi (Area Chart)
+        var ctxTrend = document.getElementById("tasarrufTrendChart");
+        if (ctxTrend) {
+            new Chart(ctxTrend.getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: aylar12,
+                    datasets: [{
+                        label: 'Net Kasa Değişimi (₺)',
+                        borderColor: '#17a2b8',
+                        backgroundColor: 'rgba(23, 162, 184, 0.2)',
+                        borderWidth: 3,
+                        pointBackgroundColor: '#17a2b8',
+                        pointBorderColor: '#fff',
+                        pointRadius: 5,
+                        data: tasarruflar12
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    legend: { display: false },
+                    tooltips: {
+                        callbacks: {
+                            label: function (tooltipItem) {
+                                return 'Net Tasarruf: ' + Number(tooltipItem.yLabel).toLocaleString('tr-TR', { minimumFractionDigits: 2 }) + ' ₺';
+                            }
+                        }
+                    },
+                    scales: {
+                        xAxes: [{ gridLines: { display: false } }],
+                        yAxes: [{
+                            gridLines: { color: 'rgba(0,0,0,0.05)' },
+                            ticks: {
+                                callback: function (value) {
+                                    return value.toLocaleString('tr-TR') + ' ₺';
+                                }
+                            }
+                        }]
+                    }
+                }
+            });
+        }
+    });
+</script>

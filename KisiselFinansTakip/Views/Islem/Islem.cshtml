@@ -1,0 +1,199 @@
+@model KisiselFinansTakip.Models.ViewModels.IslemViewModel
+@using KisiselFinansTakip.Models.Siniflar
+
+@{
+    ViewData["Title"] = "Gelir / Gider Ekle";
+    var sonIslemler = ViewBag.SonIslemler as List<Islem> ?? new List<Islem>();
+}
+
+<div class="row page-titles mx-0 align-items-center">
+    <div class="col-sm-6 p-md-0">
+        <div class="welcome-text">
+            <h4 class="font-weight-bold text-primary">Yeni İşlem Kaydı</h4>
+            <p class="mb-0 text-muted">Bütçenizi anlık takip etmek için yeni bir gelir veya gider kaydı girin</p>
+        </div>
+    </div>
+    <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Default" asp-action="Index">Ana Panel</a></li>
+            <li class="breadcrumb-item active">İşlem Ekle</li>
+        </ol>
+    </div>
+</div>
+
+@if (TempData["IslemMesaj"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+        <i class="fa fa-check-circle mr-1"></i> @TempData["IslemMesaj"]
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+<div class="row">
+    <!-- Sol: İşlem Ekleme Formu -->
+    <div class="col-xl-6 col-lg-6">
+        <div class="card shadow-sm">
+            <div class="card-header border-bottom">
+                <h5 class="card-title font-weight-bold text-dark m-0">
+                    <i class="fa fa-plus-circle text-primary mr-2"></i> Finansal Hareket Formu
+                </h5>
+            </div>
+            <div class="card-body">
+                <form asp-action="Islem" method="post">
+                    @Html.AntiForgeryToken()
+
+                    <!-- İşlem Türü -->
+                    <div class="form-group">
+                        <label class="font-weight-bold">İşlem Türü</label>
+                        <select asp-for="Tip" id="tipDropdown" class="form-control" required>
+                            <option value="Gider">Gider (Harcama)</option>
+                            <option value="Gelir">Gelir (Girdi)</option>
+                        </select>
+                        <span asp-validation-for="Tip" class="text-danger small"></span>
+                    </div>
+
+                    <!-- Kategori Seçimi -->
+                    <div class="form-group">
+                        <label class="font-weight-bold">Kategori</label>
+                        <select asp-for="KategoriID" id="kategoriDropdown" class="form-control" required>
+                            <option value="">Kategori Seçiniz...</option>
+                            @if (Model.Kategoriler != null)
+                            {
+                                foreach (var k in Model.Kategoriler)
+                                {
+                                    <option value="@k.KategoriID">@k.KategoriAdi</option>
+                                }
+                            }
+                        </select>
+                        <span asp-validation-for="KategoriID" class="text-danger small"></span>
+                    </div>
+
+                    <!-- Tutar -->
+                    <div class="form-group">
+                        <label class="font-weight-bold">Tutar (₺)</label>
+                        <div class="input-group">
+                            <input type="number" step="0.01" min="0.01" asp-for="Tutar" class="form-control" placeholder="0.00" required />
+                            <div class="input-group-append">
+                                <span class="input-group-text font-weight-bold">₺</span>
+                            </div>
+                        </div>
+                        <span asp-validation-for="Tutar" class="text-danger small"></span>
+                    </div>
+
+                    <!-- Tarih -->
+                    <div class="form-group">
+                        <label class="font-weight-bold">İşlem Tarihi</label>
+                        <input type="date" asp-for="Tarih" class="form-control" value="@DateTime.Today.ToString("yyyy-MM-dd")" required />
+                        <span asp-validation-for="Tarih" class="text-danger small"></span>
+                    </div>
+
+                    <!-- Açıklama -->
+                    <div class="form-group">
+                        <label class="font-weight-bold">Açıklama / Not</label>
+                        <input type="text" asp-for="Aciklama" class="form-control" placeholder="Örn: Haftalık market alışverişi, Maaş ödemesi vb." required />
+                        <span asp-validation-for="Aciklama" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-primary btn-block font-weight-bold shadow-sm py-2">
+                            <i class="fa fa-save mr-1"></i> İşlemi Kaydet
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sağ: Son Eklenen İşlemler & Kısayollar -->
+    <div class="col-xl-6 col-lg-6">
+        <div class="card shadow-sm">
+            <div class="card-header border-bottom d-flex justify-content-between align-items-center">
+                <h5 class="card-title font-weight-bold text-dark m-0">
+                    <i class="fa fa-history text-info mr-2"></i> Son İşlem Kayıtlarınız
+                </h5>
+                <a asp-controller="Islemlerim" asp-action="Islemler" class="btn btn-sm btn-outline-primary">Tümünü Gör</a>
+            </div>
+            <div class="card-body">
+                @if (sonIslemler.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Tarih</th>
+                                    <th>Açıklama</th>
+                                    <th>Kategori</th>
+                                    <th class="text-right">Tutar</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in sonIslemler)
+                                {
+                                    bool isGelir = item.Kategori?.Tip == "Gelir";
+                                    <tr>
+                                        <td class="small text-muted">@item.Tarih.ToString("dd.MM.yyyy")</td>
+                                        <td class="font-weight-bold">@item.Aciklama</td>
+                                        <td>
+                                            <span class="badge @(isGelir ? "badge-success" : "badge-danger")">
+                                                @item.Kategori?.KategoriAdi
+                                            </span>
+                                        </td>
+                                        <td class="text-right font-weight-bold @(isGelir ? "text-success" : "text-danger")">
+                                            @(isGelir ? "+" : "-")@item.Tutar.ToString("N2") ₺
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center py-5 text-muted">
+                        <i class="fa fa-file-invoice-dollar fa-3x mb-3 text-primary"></i>
+                        <h5>Henüz kayıtlı bir işlem yok.</h5>
+                        <p>Soldaki formu doldurarak ilk gelir veya giderinizi ekleyin.</p>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="card shadow-sm border-0 bg-light">
+            <div class="card-body">
+                <h6 class="font-weight-bold text-dark mb-2"><i class="fa fa-lightbulb text-warning mr-1"></i> İpucu</h6>
+                <p class="text-muted small mb-0">
+                    Kategori listenizde aradığınız başlık yoksa sol menüdeki 
+                    <a asp-controller="Kategori" asp-action="Kategori" class="text-primary font-weight-bold">Kategori Yönetimi</a> 
+                    sayfasından hemen yeni kategoriler oluşturabilirsiniz.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $("#tipDropdown").change(function () {
+                var secilenTip = $(this).val();
+                if (secilenTip) {
+                    $.ajax({
+                        url: '@Url.Action("KategorileriGetir", "Islem")',
+                        type: 'GET',
+                        data: { tip: secilenTip },
+                        success: function (data) {
+                            var dropdown = $("#kategoriDropdown");
+                            dropdown.empty();
+                            dropdown.append($('<option>').val('').text('Kategori Seçiniz...'));
+                            $.each(data, function (i, item) {
+                                dropdown.append($('<option>').val(item.kategoriID).text(item.kategoriAdi));
+                            });
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}

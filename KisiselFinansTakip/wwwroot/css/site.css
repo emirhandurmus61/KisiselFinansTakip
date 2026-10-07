@@ -1,22 +1,122 @@
-html {
-  font-size: 14px;
+/* ==========================================================================
+   Kisisel Finans Takip - Ozel Stil ve Duzeltmeler
+   ========================================================================== */
+
+/* Sol Sidebar (Menü) - İkon ve Metin Hizalaması Düzeltmesi */
+.quixnav .metismenu > li > a {
+    display: flex !important;
+    align-items: center !important;
+    padding: 0.75rem 1.25rem !important;
+    position: relative !important;
 }
 
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+.quixnav .metismenu > li > a i,
+.quixnav .metismenu > li > a > i.fa,
+.quixnav .metismenu > li > a > i.fas,
+.quixnav .metismenu > li > a > i.icon {
+    width: 26px !important;
+    min-width: 26px !important;
+    height: 26px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-right: 12px !important;
+    padding: 0 !important;
+    font-size: 1.1rem !important;
+    position: static !important;
+    top: 0 !important;
+    line-height: 1 !important;
+    text-align: center !important;
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+.quixnav .metismenu > li > a .nav-text {
+    flex: 1 !important;
+    display: inline-block !important;
+    padding-left: 0 !important;
+    margin: 0 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    line-height: normal !important;
 }
 
-html {
-  position: relative;
-  min-height: 100%;
+/* Alt Menü Elemanları */
+.quixnav .metismenu ul a {
+    display: flex !important;
+    align-items: center !important;
+    padding-left: 48px !important;
 }
 
-body {
-  margin-bottom: 60px;
+.quixnav .metismenu ul a i {
+    width: 18px !important;
+    min-width: 18px !important;
+    margin-right: 8px !important;
+    font-size: 0.85rem !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+/* Üst Finansal Kartlar (Stat Widgets) - İkonların Kusursuz Daire Yapılması */
+.stat-widget-one {
+    display: flex !important;
+    align-items: center !important;
+}
+
+.stat-widget-one .stat-icon {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    vertical-align: middle !important;
+    margin-right: 15px !important;
+}
+
+.stat-widget-one .stat-icon i {
+    width: 58px !important;
+    min-width: 58px !important;
+    height: 58px !important;
+    min-height: 58px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 50% !important;
+    border-width: 2.5px !important;
+    border-style: solid !important;
+    padding: 0 !important;
+    font-size: 24px !important;
+    line-height: 1 !important;
+    text-align: center !important;
+    box-sizing: border-box !important;
+}
+
+.stat-widget-one .stat-content {
+    margin-left: 0 !important;
+    margin-top: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+}
+
+.stat-widget-one .stat-text {
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    color: #6c757d !important;
+    margin-bottom: 2px !important;
+}
+
+.stat-widget-one .stat-digit {
+    font-size: 20px !important;
+    font-weight: 700 !important;
+    line-height: 1.2 !important;
+}
+
+/* Genel Kart ve Buton İyileştirmeleri */
+.card {
+    border-radius: 10px !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05) !important;
+    border: none !important;
+}
+
+.btn {
+    border-radius: 6px !important;
 }

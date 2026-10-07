@@ -1,0 +1,196 @@
+@model List<KisiselFinansTakip.Models.Siniflar.Islem>
+@using KisiselFinansTakip.Models.Siniflar
+
+@{
+    ViewData["Title"] = "Gelir - Gider İşlemlerim";
+    decimal toplamGelir = ViewBag.ToplamGelir ?? 0m;
+    decimal toplamGider = ViewBag.ToplamGider ?? 0m;
+    decimal netBakiye = ViewBag.NetBakiye ?? 0m;
+    var kategoriler = ViewBag.Kategoriler as List<Kategori> ?? new List<Kategori>();
+    string secilenTip = ViewBag.SecilenTip as string;
+    int? secilenKategori = ViewBag.SecilenKategori as int?;
+}
+
+<div class="row page-titles mx-0 align-items-center">
+    <div class="col-sm-6 p-md-0">
+        <div class="welcome-text">
+            <h4 class="font-weight-bold text-primary">Gelir - Gider Hareketlerim</h4>
+            <p class="mb-0 text-muted">Kayıtlı tüm finansal işlemlerinizi filtreleyin, inceleyin veya yönetin</p>
+        </div>
+    </div>
+    <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+        <a asp-controller="Islem" asp-action="Islem" class="btn btn-primary shadow-sm font-weight-bold">
+            <i class="fa fa-plus-circle mr-1"></i> Yeni İşlem Ekle
+        </a>
+    </div>
+</div>
+
+@if (TempData["Mesaj"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+        <i class="fa fa-check-circle mr-1"></i> @TempData["Mesaj"]
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+@if (TempData["HataMesaji"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+        <i class="fa fa-exclamation-triangle mr-1"></i> @TempData["HataMesaji"]
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+<!-- Üst 3 Finansal Özet Kartı -->
+<div class="row mb-3">
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 bg-success text-white">
+            <div class="card-body py-3 d-flex justify-content-between align-items-center">
+                <div>
+                    <h6 class="text-white-50 mb-1">Toplam Gelir</h6>
+                    <h3 class="text-white font-weight-bold mb-0">+@toplamGelir.ToString("N2") ₺</h3>
+                </div>
+                <i class="fa fa-arrow-down fa-2x text-white-50"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 bg-danger text-white">
+            <div class="card-body py-3 d-flex justify-content-between align-items-center">
+                <div>
+                    <h6 class="text-white-50 mb-1">Toplam Gider</h6>
+                    <h3 class="text-white font-weight-bold mb-0">-@toplamGider.ToString("N2") ₺</h3>
+                </div>
+                <i class="fa fa-arrow-up fa-2x text-white-50"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 bg-info text-white">
+            <div class="card-body py-3 d-flex justify-content-between align-items-center">
+                <div>
+                    <h6 class="text-white-50 mb-1">Net Bakiye (Kasa)</h6>
+                    <h3 class="text-white font-weight-bold mb-0">@netBakiye.ToString("N2") ₺</h3>
+                </div>
+                <i class="fa fa-wallet fa-2x text-white-50"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Filtreleme Alanı -->
+<div class="card shadow-sm mb-4">
+    <div class="card-body py-3">
+        <form method="get" asp-action="Islemler" class="form-row align-items-center">
+            <div class="col-md-4 my-1">
+                <label class="sr-only">Tür Filtresi</label>
+                <select name="tipFiltre" class="form-control">
+                    <option value="">Tüm İşlem Türleri (Gelir & Gider)</option>
+                    <option value="Gelir" selected="@(secilenTip == "Gelir" ? "selected" : null)">Sadece Gelirler</option>
+                    <option value="Gider" selected="@(secilenTip == "Gider" ? "selected" : null)">Sadece Giderler</option>
+                </select>
+            </div>
+            <div class="col-md-4 my-1">
+                <label class="sr-only">Kategori Filtresi</label>
+                <select name="kategoriFiltre" class="form-control">
+                    <option value="">Tüm Kategoriler</option>
+                    @foreach (var kat in kategoriler)
+                    {
+                        <option value="@kat.KategoriID" selected="@(secilenKategori == kat.KategoriID ? "selected" : null)">
+                            @kat.KategoriAdi (@kat.Tip)
+                        </option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-4 my-1 d-flex">
+                <button type="submit" class="btn btn-primary flex-grow-1 mr-2 font-weight-bold">
+                    <i class="fa fa-filter mr-1"></i> Filtrele
+                </button>
+                <a asp-action="Islemler" class="btn btn-outline-secondary" title="Filtreleri Temizle">
+                    <i class="fa fa-undo"></i>
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- İşlemler Tablosu -->
+<div class="card shadow-sm">
+    <div class="card-header border-bottom d-flex justify-content-between align-items-center">
+        <h5 class="card-title font-weight-bold text-dark m-0">
+            <i class="fa fa-table text-primary mr-2"></i> İşlem Kayıtları Listesi (@(Model?.Count ?? 0) Kayıt)
+        </h5>
+    </div>
+    <div class="card-body">
+        @if (Model != null && Model.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="thead-light">
+                        <tr>
+                            <th style="width: 50px;">#</th>
+                            <th>Tarih</th>
+                            <th>Açıklama</th>
+                            <th>Kategori</th>
+                            <th>İşlem Türü</th>
+                            <th class="text-right">Tutar</th>
+                            <th class="text-right" style="width: 100px;">İşlem</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{ int sira = 1; }
+                        @foreach (var item in Model)
+                        {
+                            bool isGelir = item.Kategori?.Tip == "Gelir";
+                            <tr>
+                                <td class="font-weight-bold text-muted">@sira</td>
+                                <td>
+                                    <i class="fa fa-calendar-alt text-muted mr-1"></i>
+                                    @item.Tarih.ToString("dd.MM.yyyy")
+                                </td>
+                                <td class="font-weight-bold text-dark">@item.Aciklama</td>
+                                <td>
+                                    <span class="badge badge-light border">@item.Kategori?.KategoriAdi</span>
+                                </td>
+                                <td>
+                                    <span class="badge @(isGelir ? "badge-success" : "badge-danger") px-2 py-1 font-weight-bold">
+                                        <i class="fa @(isGelir ? "fa-arrow-down" : "fa-arrow-up") mr-1"></i>
+                                        @item.Kategori?.Tip
+                                    </span>
+                                </td>
+                                <td class="text-right font-weight-bold @(isGelir ? "text-success" : "text-danger")" style="font-size: 15px;">
+                                    @(isGelir ? "+" : "-")@item.Tutar.ToString("N2") ₺
+                                </td>
+                                <td class="text-right">
+                                    <form asp-action="Sil" method="post" class="d-inline" onsubmit="return confirm('Bu işlemi silmek istediğinizden emin misiniz?');">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@item.IslemID" />
+                                        <button type="submit" class="btn btn-sm btn-outline-danger shadow-sm" title="İşlemi Sil">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            sira++;
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-5 text-muted">
+                <i class="fa fa-search fa-3x mb-3 text-primary"></i>
+                <h5>Herhangi bir işlem kaydı bulunamadı.</h5>
+                <p class="mb-3">Filtre kriterlerinizi değiştirebilir veya yeni bir gelir/gider ekleyebilirsiniz.</p>
+                <a asp-controller="Islem" asp-action="Islem" class="btn btn-primary font-weight-bold">
+                    <i class="fa fa-plus-circle mr-1"></i> Yeni İşlem Ekle
+                </a>
+            </div>
+        }
+    </div>
+</div>

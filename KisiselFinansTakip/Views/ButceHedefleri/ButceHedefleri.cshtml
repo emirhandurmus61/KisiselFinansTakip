@@ -1,0 +1,203 @@
+@model KisiselFinansTakip.Models.ViewModels.ButceHedefEkleViewModel
+@using KisiselFinansTakip.Models.Siniflar
+
+@{
+    ViewData["Title"] = "Bütçe Hedefleri Belirle";
+    var mevcutHedefler = ViewBag.MevcutHedefler as List<ButceHedefleri> ?? new List<ButceHedefleri>();
+
+    var aylar = new List<SelectListItem>
+    {
+        new SelectListItem { Value = "1", Text = "Ocak" },
+        new SelectListItem { Value = "2", Text = "Şubat" },
+        new SelectListItem { Value = "3", Text = "Mart" },
+        new SelectListItem { Value = "4", Text = "Nisan" },
+        new SelectListItem { Value = "5", Text = "Mayıs" },
+        new SelectListItem { Value = "6", Text = "Haziran" },
+        new SelectListItem { Value = "7", Text = "Temmuz" },
+        new SelectListItem { Value = "8", Text = "Ağustos" },
+        new SelectListItem { Value = "9", Text = "Eylül" },
+        new SelectListItem { Value = "10", Text = "Ekim" },
+        new SelectListItem { Value = "11", Text = "Kasım" },
+        new SelectListItem { Value = "12", Text = "Aralık" }
+    };
+
+    int suankiYil = DateTime.Now.Year;
+    var yillar = Enumerable.Range(suankiYil - 2, 5).Select(y => new SelectListItem
+    {
+        Value = y.ToString(),
+        Text = y.ToString()
+    }).ToList();
+}
+
+<div class="row page-titles mx-0 align-items-center">
+    <div class="col-sm-6 p-md-0">
+        <div class="welcome-text">
+            <h4 class="font-weight-bold text-primary">Bütçe Hedefleri Yönetimi</h4>
+            <p class="mb-0 text-muted">Aylık harcama limitlerinizi ve tasarruf hedeflerinizi belirleyin</p>
+        </div>
+    </div>
+    <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+        <a asp-controller="ButceHedeflerim" asp-action="ButceHedeflerim" class="btn btn-outline-primary shadow-sm font-weight-bold">
+            <i class="fa fa-chart-line mr-1"></i> Hedef Durumunu İzle
+        </a>
+    </div>
+</div>
+
+@if (TempData["BasariMesaji"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+        <i class="fa fa-check-circle mr-1"></i> @TempData["BasariMesaji"]
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+<div class="row">
+    <!-- Sol: Hedef Belirleme Formu -->
+    <div class="col-xl-5 col-lg-6">
+        <div class="card shadow-sm">
+            <div class="card-header border-bottom">
+                <h5 class="card-title font-weight-bold text-dark m-0">
+                    <i class="fa fa-bullseye text-primary mr-2"></i> Hedef Belirleme Formu
+                </h5>
+            </div>
+            <div class="card-body">
+                <form asp-action="Ekle" method="post">
+                    @Html.AntiForgeryToken()
+
+                    <!-- Yıl ve Ay Seçimi -->
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label class="font-weight-bold">Yıl</label>
+                            <select asp-for="Yil" asp-items="yillar" class="form-control" required></select>
+                            <span asp-validation-for="Yil" class="text-danger small"></span>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="font-weight-bold">Ay</label>
+                            <select asp-for="Ay" asp-items="aylar" class="form-control" required></select>
+                            <span asp-validation-for="Ay" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <!-- Kategori Türü -->
+                    <div class="form-group">
+                        <label class="font-weight-bold">Kategori Türü</label>
+                        <select id="kategoriTip" name="KategoriTip" class="form-control">
+                            <option value="Gider" selected>Gider Hedefi (Harcama Limiti)</option>
+                            <option value="Gelir">Gelir Hedefi (Beklenen Gelir)</option>
+                        </select>
+                    </div>
+
+                    <!-- Kategori Seçimi -->
+                    <div class="form-group">
+                        <label class="font-weight-bold">Kategori</label>
+                        <select asp-for="KategoriID" id="kategoriDropdown" class="form-control" asp-items="ViewBag.Kategoriler" required>
+                            <option value="">Kategori Seçiniz...</option>
+                        </select>
+                        <span asp-validation-for="KategoriID" class="text-danger small"></span>
+                    </div>
+
+                    <!-- Hedef Tutar -->
+                    <div class="form-group">
+                        <label class="font-weight-bold">Hedef Tutar (₺)</label>
+                        <div class="input-group">
+                            <input type="number" step="0.01" min="1" asp-for="HedefTutar" class="form-control" placeholder="0.00" required />
+                            <div class="input-group-append">
+                                <span class="input-group-text font-weight-bold">₺</span>
+                            </div>
+                        </div>
+                        <span asp-validation-for="HedefTutar" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-primary btn-block font-weight-bold shadow-sm py-2">
+                            <i class="fa fa-save mr-1"></i> Hedefi Kaydet
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sağ: Son Belirlenen Hedefler -->
+    <div class="col-xl-7 col-lg-6">
+        <div class="card shadow-sm">
+            <div class="card-header border-bottom d-flex justify-content-between align-items-center">
+                <h5 class="card-title font-weight-bold text-dark m-0">
+                    <i class="fa fa-list text-info mr-2"></i> Belirlenen Bütçe Hedefleri
+                </h5>
+                <a asp-controller="ButceHedeflerim" asp-action="ButceHedeflerim" class="btn btn-sm btn-primary">
+                    İlerleme Durumunu Gör
+                </a>
+            </div>
+            <div class="card-body">
+                @if (mevcutHedefler.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Dönem</th>
+                                    <th>Kategori</th>
+                                    <th>Tür</th>
+                                    <th class="text-right">Hedef Tutar</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var h in mevcutHedefler)
+                                {
+                                    bool isGelir = h.Kategori?.Tip == "Gelir";
+                                    var ayAdi = aylar.FirstOrDefault(a => a.Value == h.Ay.ToString())?.Text ?? h.Ay.ToString();
+                                    <tr>
+                                        <td class="font-weight-bold">@ayAdi @h.Yil</td>
+                                        <td>@h.Kategori?.KategoriAdi</td>
+                                        <td>
+                                            <span class="badge @(isGelir ? "badge-success" : "badge-danger")">
+                                                @h.Kategori?.Tip
+                                            </span>
+                                        </td>
+                                        <td class="text-right font-weight-bold text-primary" style="font-size: 15px;">
+                                            @h.HedefTutar.ToString("N2") ₺
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center py-5 text-muted">
+                        <i class="fa fa-bullseye fa-3x mb-3 text-primary"></i>
+                        <h5>Henüz bütçe hedefi tanımlamadınız.</h5>
+                        <p>Soldaki formdan bir kategori seçip aylık harcama veya gelir hedefinizi belirleyin.</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $("#kategoriTip").change(function () {
+                var tip = $(this).val();
+                $.ajax({
+                    url: '@Url.Action("KategorileriGetir", "ButceHedefleri")',
+                    type: 'GET',
+                    data: { tip: tip },
+                    success: function (data) {
+                        var dropdown = $("#kategoriDropdown");
+                        dropdown.empty();
+                        dropdown.append($('<option>').val('').text('Kategori Seçiniz...'));
+                        $.each(data, function (i, item) {
+                            dropdown.append($('<option>').val(item.kategoriID).text(item.kategoriAdi));
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+}
