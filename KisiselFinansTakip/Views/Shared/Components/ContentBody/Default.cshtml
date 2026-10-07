@@ -38,7 +38,7 @@
             <h3 class="font-weight-bold text-primary mb-1">
                 <i class="fa fa-chart-line mr-2"></i> Finansal Analitik & Genel Bakış
             </h3>
-            <p class="mb-0 text-muted">Son 1 yıllık gelir-gider trendiniz, bütçe hedefleriniz ve nakit akışı raporlarınız</p>
+            <p class="mb-0 text-muted">Son 1 yıllık gelir-gider trendiniz, bütçe hedefleriniz ve akıllı tasarruf tavsiyeleriniz</p>
         </div>
     </div>
     <div class="col-sm-5 p-md-0 justify-content-sm-end mt-3 mt-sm-0 d-flex">
@@ -50,6 +50,90 @@
         </a>
     </div>
 </div>
+
+<!-- =========================================================================
+     AKILLI FİNANS DANIŞMANI: ÖZEL İÇGÖRÜLER & TASARRUF TAVSİYELERİ
+     ========================================================================= -->
+@{
+    var genelIcgoruler = ViewBag.GenelIcgoruler as List<KisiselFinansTakip.Models.ViewModels.FinansIcgoru> ?? new List<KisiselFinansTakip.Models.ViewModels.FinansIcgoru>();
+}
+
+@if (genelIcgoruler.Any())
+{
+    <div class="card border-0 shadow-sm mb-4" style="background: #ffffff; border-radius: 12px; border-top: 4px solid #593bdb !important;">
+        <div class="card-body p-4">
+            <div class="d-flex flex-wrap justify-content-between align-items-center pb-3 mb-3 border-bottom">
+                <div class="d-flex align-items-center">
+                    <div class="brand-badge mr-3">
+                        <i class="fa fa-compass text-white"></i>
+                    </div>
+                    <div>
+                        <h5 class="font-weight-bold text-dark mb-0">FinFlow Akıllı Finans Danışmanı</h5>
+                        <span class="text-muted small">Gelir ve harcama alışkanlıklarınıza göre özel olarak üretilen aksiyon tavsiyeleri</span>
+                    </div>
+                </div>
+                <span class="badge badge-primary px-3 py-2 font-weight-bold mt-2 mt-md-0" style="font-size: 11px;">
+                    <i class="fa fa-check-circle mr-1"></i> Aktif Analiz Raporu
+                </span>
+            </div>
+
+            <div class="row">
+                @foreach (var tavsiye in genelIcgoruler)
+                {
+                    string cardBg = "#f8f9fa";
+                    string borderAccent = "#593bdb";
+                    string iconColor = "#593bdb";
+                    string titleColor = "#2c324f";
+
+                    if (tavsiye.Tip == KisiselFinansTakip.Models.ViewModels.FinansTavsiyeTipi.Basari)
+                    {
+                        cardBg = "#f2fbf5";
+                        borderAccent = "#28a745";
+                        iconColor = "#28a745";
+                        titleColor = "#155724";
+                    }
+                    else if (tavsiye.Tip == KisiselFinansTakip.Models.ViewModels.FinansTavsiyeTipi.Uyari)
+                    {
+                        cardBg = "#fffdf5";
+                        borderAccent = "#ffc107";
+                        iconColor = "#d39e00";
+                        titleColor = "#856404";
+                    }
+                    else if (tavsiye.Tip == KisiselFinansTakip.Models.ViewModels.FinansTavsiyeTipi.Tehlike)
+                    {
+                        cardBg = "#fdf4f5";
+                        borderAccent = "#dc3545";
+                        iconColor = "#dc3545";
+                        titleColor = "#721c24";
+                    }
+
+                    <div class="col-lg-6 col-12 mb-3">
+                        <div class="p-3 h-100 rounded shadow-xs" style="background-color: @cardBg; border: 1px solid rgba(0,0,0,0.06); border-left: 4px solid @borderAccent !important; border-radius: 10px;">
+                            <div class="d-flex align-items-start">
+                                <div class="rounded-circle d-inline-flex align-items-center justify-content-center mr-3 mt-1 shadow-xs" style="width: 38px; height: 38px; min-width: 38px; background-color: #ffffff; color: @iconColor; border: 1px solid rgba(0,0,0,0.08); font-size: 16px;">
+                                    <i class="fa @tavsiye.Ikon"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="font-weight-bold mb-1" style="color: @titleColor; font-size: 0.95rem;">@tavsiye.Baslik</h6>
+                                    <p class="text-dark mb-2 small" style="line-height: 1.5; color: #495057 !important;">@tavsiye.Mesaj</p>
+                                    @if (!string.IsNullOrEmpty(tavsiye.AksiyonOnerisi))
+                                    {
+                                        <div class="p-2 rounded small bg-white border" style="border-color: rgba(0,0,0,0.08) !important;">
+                                            <strong class="text-dark d-block mb-1" style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;">
+                                                <i class="fa fa-arrow-circle-right text-primary mr-1"></i> Tavsiye Edilen Aksiyon:
+                                            </strong>
+                                            <span class="text-muted" style="line-height: 1.4; display: block;">@tavsiye.AksiyonOnerisi</span>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}
 
 <!-- 1. BÖLÜM: Bu Ay ve Kasa Durumu (4 Ana Widget) -->
 <div class="row mb-3">

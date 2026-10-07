@@ -84,6 +84,90 @@
     </div>
 </div>
 
+<!-- =========================================================================
+     AKILLI BÜTÇE ASİSTANI & DİNAMİK İÇGÖRÜ BİLDİRİMLERİ (SMART NOTIFICATIONS)
+     ========================================================================= -->
+@{
+    var icgoruler = ViewBag.Icgoruler as List<KisiselFinansTakip.Models.ViewModels.FinansIcgoru> ?? new List<KisiselFinansTakip.Models.ViewModels.FinansIcgoru>();
+}
+
+@if (icgoruler.Any())
+{
+    <div class="card border-0 shadow-sm mb-4" style="background: #ffffff; border-radius: 12px; border-top: 4px solid var(--finflow-primary) !important;">
+        <div class="card-body p-4">
+            <div class="d-flex align-items-center justify-content-between flex-wrap pb-3 mb-3 border-bottom">
+                <div class="d-flex align-items-center">
+                    <div class="brand-badge mr-3">
+                        <i class="fa fa-chart-line text-white"></i>
+                    </div>
+                    <div>
+                        <h5 class="font-weight-bold text-dark mb-0">FinFlow Bütçe Analiz Bildirimleri</h5>
+                        <span class="text-muted small">Harcama hızınıza ve limitlerinize göre anlık üretilen finansal içgörüler</span>
+                    </div>
+                </div>
+                <span class="badge badge-primary px-3 py-2 font-weight-bold mt-2 mt-md-0" style="font-size: 11px;">
+                    <i class="fa fa-bell mr-1"></i> @icgoruler.Count Bildirim
+                </span>
+            </div>
+
+            <div class="row">
+                @foreach (var item in icgoruler)
+                {
+                    string cardBg = "#f8f9fa";
+                    string borderAccent = "#593bdb";
+                    string iconColor = "#593bdb";
+                    string titleColor = "#2c324f";
+
+                    if (item.Tip == KisiselFinansTakip.Models.ViewModels.FinansTavsiyeTipi.Basari)
+                    {
+                        cardBg = "#f2fbf5";
+                        borderAccent = "#28a745";
+                        iconColor = "#28a745";
+                        titleColor = "#155724";
+                    }
+                    else if (item.Tip == KisiselFinansTakip.Models.ViewModels.FinansTavsiyeTipi.Uyari)
+                    {
+                        cardBg = "#fffdf5";
+                        borderAccent = "#ffc107";
+                        iconColor = "#d39e00";
+                        titleColor = "#856404";
+                    }
+                    else if (item.Tip == KisiselFinansTakip.Models.ViewModels.FinansTavsiyeTipi.Tehlike)
+                    {
+                        cardBg = "#fdf4f5";
+                        borderAccent = "#dc3545";
+                        iconColor = "#dc3545";
+                        titleColor = "#721c24";
+                    }
+
+                    <div class="col-lg-6 col-12 mb-3">
+                        <div class="p-3 h-100 rounded shadow-xs" style="background-color: @cardBg; border: 1px solid rgba(0,0,0,0.06); border-left: 4px solid @borderAccent !important; border-radius: 10px;">
+                            <div class="d-flex align-items-start">
+                                <div class="rounded-circle d-inline-flex align-items-center justify-content-center mr-3 mt-1 shadow-xs" style="width: 38px; height: 38px; min-width: 38px; background-color: #ffffff; color: @iconColor; border: 1px solid rgba(0,0,0,0.08); font-size: 16px;">
+                                    <i class="fa @item.Ikon"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="font-weight-bold mb-1" style="color: @titleColor; font-size: 0.95rem;">@item.Baslik</h6>
+                                    <p class="text-dark mb-2 small" style="line-height: 1.5; color: #495057 !important;">@item.Mesaj</p>
+                                    @if (!string.IsNullOrEmpty(item.AksiyonOnerisi))
+                                    {
+                                        <div class="p-2 rounded small bg-white border" style="border-color: rgba(0,0,0,0.08) !important;">
+                                            <strong class="text-dark d-block mb-1" style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;">
+                                                <i class="fa fa-arrow-circle-right text-primary mr-1"></i> Önerilen Aksiyon:
+                                            </strong>
+                                            <span class="text-muted" style="line-height: 1.4; display: block;">@item.AksiyonOnerisi</span>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}
+
 <!-- Dönem Bütçe Özet Kartları -->
 <div class="row mb-3">
     <div class="col-md-4">

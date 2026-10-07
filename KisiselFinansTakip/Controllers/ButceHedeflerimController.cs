@@ -10,10 +10,12 @@ namespace KisiselFinansTakip.Controllers
     public class ButceHedeflerimController : Controller
     {
         private readonly VeritabaniContext _db;
+        private readonly KisiselFinansTakip.Services.FinansAsistaniService _asistanService;
 
-        public ButceHedeflerimController(VeritabaniContext db)
+        public ButceHedeflerimController(VeritabaniContext db, KisiselFinansTakip.Services.FinansAsistaniService asistanService)
         {
             _db = db;
+            _asistanService = asistanService;
         }
 
         public IActionResult ButceHedeflerim(int? ayFiltre = null, int? yilFiltre = null)
@@ -58,6 +60,10 @@ namespace KisiselFinansTakip.Controllers
             ViewBag.ToplamHedeflenen = toplamHedeflenen;
             ViewBag.ToplamHarcanan = toplamHarcanan;
             ViewBag.KalanButce = kalanButce;
+
+            // Akıllı Asistan Bildirimleri ve İçgörüleri
+            var icgoruler = _asistanService.GetButceHedefIcgoruListesi(kullaniciId.Value, secilenAy, secilenYil, hedefler);
+            ViewBag.Icgoruler = icgoruler;
 
             return View(hedefler);
         }

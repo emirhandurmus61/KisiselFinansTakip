@@ -11,10 +11,12 @@ namespace KisiselFinansTakip.ViewComponents
     public class ContentBodyViewComponent : ViewComponent
     {
         private readonly VeritabaniContext _db;
+        private readonly KisiselFinansTakip.Services.FinansAsistaniService _asistanService;
 
-        public ContentBodyViewComponent(VeritabaniContext db)
+        public ContentBodyViewComponent(VeritabaniContext db, KisiselFinansTakip.Services.FinansAsistaniService asistanService)
         {
             _db = db;
+            _asistanService = asistanService;
         }
 
         public IViewComponentResult Invoke()
@@ -191,6 +193,9 @@ namespace KisiselFinansTakip.ViewComponents
             ViewBag.BuAyGiderKategorileri = buAyKategoriGiderleri;
             ViewBag.ButceHedefleriDetay = hedefDetaylar;
             ViewBag.SonIslemler = tumIslemler.Take(6).ToList();
+
+            // FinFlow Akıllı Finans Danışmanı İçgörüleri
+            ViewBag.GenelIcgoruler = _asistanService.GetGenelFinansIcgoruListesi(kullaniciId);
 
             return View();
         }

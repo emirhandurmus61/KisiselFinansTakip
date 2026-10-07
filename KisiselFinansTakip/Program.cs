@@ -23,6 +23,9 @@ builder.Services.AddSession(options =>
 // MVC servisleri
 builder.Services.AddControllersWithViews();
 
+// Finans Danışmanı / Asistan Servisi
+builder.Services.AddScoped<KisiselFinansTakip.Services.FinansAsistaniService>();
+
 var app = builder.Build();
 
 // Hata sayfasi ve guvenlik ayarlari
