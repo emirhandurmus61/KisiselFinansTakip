@@ -1,56 +1,84 @@
+@{
+    var aktifController = ViewContext.RouteData.Values["controller"]?.ToString();
+    var aktifAction = ViewContext.RouteData.Values["action"]?.ToString();
+    var kullaniciAdi = Context.Session.GetString("KullaniciAdi") ?? "Kullanıcı";
+}
+
 <div class="quixnav">
     <div class="quixnav-scroll">
+        <!-- Mobil Sidebar Başlığı & Kapat Butonu -->
+        <div class="sidebar-mobile-header d-lg-none d-flex align-items-center justify-content-between p-3 border-bottom">
+            <div class="d-flex align-items-center">
+                <div class="brand-badge-sm mr-2">
+                    <i class="fa fa-wallet text-white"></i>
+                </div>
+                <span class="font-weight-bold text-dark" style="font-size: 1.15rem;">Fin<strong>Flow</strong></span>
+            </div>
+            <button type="button" class="btn btn-sm btn-light rounded-circle sidebar-mobile-close" id="sidebarMobileClose" aria-label="Menüyü Kapat">
+                <i class="fa fa-times text-dark"></i>
+            </button>
+        </div>
+
+        <!-- Mobil Kullanıcı Bilgi Kartı -->
+        <div class="sidebar-user-card d-lg-none p-3 border-bottom mb-2 bg-light text-center">
+            <div class="user-avatar-sm mx-auto mb-1">
+                <i class="fa fa-user-circle fa-2x text-primary"></i>
+            </div>
+            <strong class="text-dark d-block small">@kullaniciAdi</strong>
+            <span class="badge badge-success px-2 py-1 mt-1 font-weight-normal" style="font-size: 11px;">Aktif Oturum</span>
+        </div>
+
         <ul class="metismenu" id="menu">
-            <li class="nav-label first">Ana Menü</li>
-            <li>
-                <a asp-controller="Default" asp-action="Index" aria-expanded="false">
-                    <i class="icon icon-chart-bar-33"></i><span class="nav-text">Genel Bakış & İstatistik</span>
+            <li class="nav-label first">Finansal Kontrol</li>
+            <li class="@(aktifController == "Default" ? "mm-active" : "")">
+                <a asp-controller="Default" asp-action="Index" aria-expanded="false" class="@(aktifController == "Default" ? "active" : "")">
+                    <i class="fa fa-chart-pie"></i><span class="nav-text">Genel Bakış & İstatistik</span>
                 </a>
             </li>
 
-            <li class="nav-label">Finansal İşlemler</li>
-            <li>
-                <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                    <i class="fa fa-exchange-alt"></i><span class="nav-text">Gelir & Gider</span>
+            <li class="nav-label">İşlemler & Gelir-Gider</li>
+            <li class="@(aktifController == "Islem" ? "mm-active" : "")">
+                <a asp-controller="Islem" asp-action="Islem" aria-expanded="false" class="@(aktifController == "Islem" ? "active" : "")">
+                    <i class="fa fa-plus-circle text-success"></i><span class="nav-text">Gelir / Gider Ekle</span>
                 </a>
-                <ul aria-expanded="false">
-                    <li><a asp-controller="Islem" asp-action="Islem"><i class="fa fa-plus-circle mr-1"></i> Gelir / Gider Ekle</a></li>
-                    <li><a asp-controller="Islemlerim" asp-action="Islemler"><i class="fa fa-list mr-1"></i> Tüm İşlemlerim</a></li>
-                </ul>
             </li>
-
-            <li>
-                <a asp-controller="Kategori" asp-action="Kategori" aria-expanded="false">
-                    <i class="fa fa-tags"></i><span class="nav-text">Kategori Yönetimi</span>
+            <li class="@(aktifController == "Islemlerim" ? "mm-active" : "")">
+                <a asp-controller="Islemlerim" asp-action="Islemler" aria-expanded="false" class="@(aktifController == "Islemlerim" ? "active" : "")">
+                    <i class="fa fa-list-alt text-primary"></i><span class="nav-text">Tüm Hareketlerim</span>
+                </a>
+            </li>
+            <li class="@(aktifController == "Kategori" ? "mm-active" : "")">
+                <a asp-controller="Kategori" asp-action="Kategori" aria-expanded="false" class="@(aktifController == "Kategori" ? "active" : "")">
+                    <i class="fa fa-tags text-warning"></i><span class="nav-text">Kategoriler</span>
                 </a>
             </li>
 
             <li class="nav-label">Bütçe & Planlama</li>
-            <li>
-                <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                    <i class="fa fa-bullseye"></i><span class="nav-text">Bütçe Hedefleri</span>
+            <li class="@(aktifController == "ButceHedeflerim" ? "mm-active" : "")">
+                <a asp-controller="ButceHedeflerim" asp-action="ButceHedeflerim" aria-expanded="false" class="@(aktifController == "ButceHedeflerim" ? "active" : "")">
+                    <i class="fa fa-bullseye text-danger"></i><span class="nav-text">Bütçe Hedef Durumu</span>
                 </a>
-                <ul aria-expanded="false">
-                    <li><a asp-controller="ButceHedefleri" asp-action="ButceHedefleri"><i class="fa fa-edit mr-1"></i> Hedef Belirle / Düzenle</a></li>
-                    <li><a asp-controller="ButceHedeflerim" asp-action="ButceHedeflerim"><i class="fa fa-chart-line mr-1"></i> Mevcut Hedef Durumu</a></li>
-                </ul>
+            </li>
+            <li class="@(aktifController == "ButceHedefleri" ? "mm-active" : "")">
+                <a asp-controller="ButceHedefleri" asp-action="ButceHedefleri" aria-expanded="false" class="@(aktifController == "ButceHedefleri" ? "active" : "")">
+                    <i class="fa fa-sliders-h text-info"></i><span class="nav-text">Hedef Limit Belirle</span>
+                </a>
+            </li>
+            <li class="@(aktifController == "Takvim" ? "mm-active" : "")">
+                <a asp-controller="Takvim" asp-action="Takvim" aria-expanded="false" class="@(aktifController == "Takvim" ? "active" : "")">
+                    <i class="fa fa-calendar-alt text-purple"></i><span class="nav-text">Finansal Takvim</span>
+                </a>
             </li>
 
-            <li>
-                <a asp-controller="Takvim" asp-action="Takvim" aria-expanded="false">
-                    <i class="fa fa-calendar-alt"></i><span class="nav-text">Finansal Takvim</span>
-                </a>
-            </li>
-
-            <li class="nav-label">Hesap</li>
-            <li>
-                <a asp-controller="Profile" asp-action="Profile" aria-expanded="false">
-                    <i class="icon icon-single-04"></i><span class="nav-text">Profilim</span>
+            <li class="nav-label">Hesap & Güvenlik</li>
+            <li class="@(aktifController == "Profile" ? "mm-active" : "")">
+                <a asp-controller="Profile" asp-action="Profile" aria-expanded="false" class="@(aktifController == "Profile" ? "active" : "")">
+                    <i class="fa fa-user-cog"></i><span class="nav-text">Profilim</span>
                 </a>
             </li>
             <li>
-                <a asp-controller="Account" asp-action="Logout" aria-expanded="false" class="text-danger">
-                    <i class="fa fa-sign-out-alt text-danger"></i><span class="nav-text text-danger">Çıkış Yap</span>
+                <a asp-controller="Account" asp-action="Logout" aria-expanded="false" class="nav-link-logout">
+                    <i class="fa fa-sign-out-alt text-danger"></i><span class="nav-text text-danger font-weight-bold">Güvenli Çıkış</span>
                 </a>
             </li>
         </ul>

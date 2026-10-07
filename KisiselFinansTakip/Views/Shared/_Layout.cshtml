@@ -29,11 +29,65 @@
         @await Component.InvokeAsync("Footer")
     </div>
 
+    <!-- Mobil Menü Karartma Katmanı (Backdrop) -->
+    <div class="sidebar-mobile-backdrop" id="sidebarBackdrop"></div>
+
     <!-- Scripts -->
     <script src="~/focus-2/vendor/global/global.min.js"></script>
     <script src="~/focus-2/js/quixnav-init.js"></script>
     <script src="~/focus-2/js/custom.min.js"></script>
     <script src="~/focus-2/vendor/chart.js/Chart.bundle.min.js"></script>
+
+    <!-- Mobil Sidebar Otomatik Kapatma ve Kullanıcı Deneyimi Scripti -->
+    <script>
+        $(document).ready(function () {
+            var $backdrop = $('#sidebarBackdrop');
+            var $wrapper = $('#main-wrapper');
+
+            function checkMobileMenu() {
+                if ($(window).width() <= 768) {
+                    if ($wrapper.hasClass('menu-toggle')) {
+                        $backdrop.addClass('active');
+                    } else {
+                        $backdrop.removeClass('active');
+                    }
+                } else {
+                    $backdrop.removeClass('active');
+                }
+            }
+
+            $('.nav-control, .hamburger').on('click', function () {
+                setTimeout(checkMobileMenu, 50);
+            });
+
+            $backdrop.on('click', function () {
+                $wrapper.removeClass('menu-toggle');
+                $('.hamburger').removeClass('is-active');
+                $backdrop.removeClass('active');
+            });
+
+            $('#sidebarMobileClose').on('click', function () {
+                $wrapper.removeClass('menu-toggle');
+                $('.hamburger').removeClass('is-active');
+                $backdrop.removeClass('active');
+            });
+
+            // Mobil cihazda bir menü linkine tıklandığında menüyü kapat
+            $('.quixnav .metismenu a').on('click', function () {
+                if ($(window).width() <= 768 && !$(this).hasClass('has-arrow')) {
+                    $wrapper.removeClass('menu-toggle');
+                    $('.hamburger').removeClass('is-active');
+                    $backdrop.removeClass('active');
+                }
+            });
+
+            $(window).on('resize', function () {
+                if ($(window).width() > 768) {
+                    $backdrop.removeClass('active');
+                }
+            });
+        });
+    </script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

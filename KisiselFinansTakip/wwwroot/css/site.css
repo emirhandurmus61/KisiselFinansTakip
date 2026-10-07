@@ -1,15 +1,150 @@
 /* ==========================================================================
-   Kisisel Finans Takip - Ozel Stil ve Duzeltmeler
+   FinFlow - Akıllı Kişisel Finans & Bütçe Yönetimi
+   Tasarım, Tipografi & Kusursuz Mobil/Masaüstü Deneyimi
    ========================================================================== */
 
-/* Sol Sidebar (Menü) - İkon ve Metin Hizalaması Düzeltmesi */
+:root {
+    --finflow-primary: #593bdb;
+    --finflow-primary-dark: #462bb8;
+    --finflow-primary-light: #f2efff;
+    --finflow-sidebar-bg: #1e2238;
+    --finflow-sidebar-hover: #292e4c;
+    --finflow-sidebar-active: #593bdb;
+    --finflow-text-bright: #f1f3f9;
+    --finflow-text-muted: #9ba3be;
+    --finflow-text-header: #6c789a;
+}
+
+/* --------------------------------------------------------------------------
+   1. BRANDING & LOGO (FinFlow)
+   -------------------------------------------------------------------------- */
+.brand-logo {
+    display: flex !important;
+    align-items: center !important;
+    padding-left: 1.25rem !important;
+    text-decoration: none !important;
+}
+
+.brand-badge {
+    width: 38px;
+    height: 38px;
+    background: linear-gradient(135deg, #7952f5 0%, #593bdb 100%);
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(89, 59, 219, 0.35);
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+.brand-badge-sm {
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, #7952f5 0%, #593bdb 100%);
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+}
+
+.brand-title {
+    font-size: 1.35rem;
+    font-weight: 500;
+    letter-spacing: -0.5px;
+    color: #ffffff !important;
+    margin-left: 4px;
+}
+
+.brand-title strong {
+    font-weight: 800;
+    color: #00e1d9;
+}
+
+/* Giriş & Kayıt Ekranı Marka Logosu */
+.brand-auth-logo .brand-auth-badge {
+    width: 58px;
+    height: 58px;
+    background: linear-gradient(135deg, #593bdb 0%, #00d2d3 100%);
+    border-radius: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    color: #ffffff;
+    box-shadow: 0 8px 20px rgba(89, 59, 219, 0.25);
+}
+
+/* --------------------------------------------------------------------------
+   2. SIDEBAR (Sol Menü) - MASAÜSTÜ & KOYU ZEMİN KUSURSUZ OKUNABİLİRLİK
+   -------------------------------------------------------------------------- */
+.quixnav {
+    background-color: var(--finflow-sidebar-bg) !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.2) !important;
+    transition: all 0.3s ease;
+}
+
+.quixnav .quixnav-scroll {
+    overflow-y: auto !important;
+}
+
+.quixnav .metismenu {
+    padding: 0.8rem 0.6rem 2.5rem 0.6rem !important;
+}
+
+/* Kategori Başlıkları (Finansal Kontrol, Bütçe & Planlama vb.) */
+.quixnav .metismenu .nav-label {
+    padding: 1.25rem 1rem 0.45rem 1rem !important;
+    font-size: 0.72rem !important;
+    font-weight: 800 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    color: #929db8 !important; /* Net okunabilir açık mavi-gri */
+}
+
+.quixnav .metismenu .nav-label.first {
+    padding-top: 0.5rem !important;
+}
+
+.quixnav .metismenu > li {
+    margin-bottom: 4px;
+}
+
+/* Menü Linkleri (Normal Durum) */
 .quixnav .metismenu > li > a {
     display: flex !important;
     align-items: center !important;
-    padding: 0.75rem 1.25rem !important;
+    padding: 0.75rem 1rem !important;
+    border-radius: 8px !important;
     position: relative !important;
+    color: #e2e6f3 !important; /* Yüksek kontrastlı, net okunabilir parlak beyaz-gri */
+    font-weight: 600 !important;
+    font-size: 0.94rem !important;
+    transition: all 0.2s ease-in-out !important;
+    background-color: transparent !important;
+    text-decoration: none !important;
 }
 
+/* Hover (Üzerine Gelindiğinde) */
+.quixnav .metismenu > li > a:hover {
+    background-color: var(--finflow-sidebar-hover) !important;
+    color: #ffffff !important;
+    transform: translateX(3px);
+}
+
+/* Aktif Menü (Seçili Sayfa) */
+.quixnav .metismenu > li.mm-active > a,
+.quixnav .metismenu > li > a.active {
+    background: linear-gradient(90deg, #593bdb 0%, #462bb8 100%) !important;
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    box-shadow: 0 4px 14px rgba(89, 59, 219, 0.45) !important;
+}
+
+/* Menü İkonları */
 .quixnav .metismenu > li > a i,
 .quixnav .metismenu > li > a > i.fa,
 .quixnav .metismenu > li > a > i.fas,
@@ -22,11 +157,16 @@
     justify-content: center !important;
     margin-right: 12px !important;
     padding: 0 !important;
-    font-size: 1.1rem !important;
+    font-size: 1.15rem !important;
     position: static !important;
-    top: 0 !important;
     line-height: 1 !important;
     text-align: center !important;
+    opacity: 0.95;
+}
+
+.quixnav .metismenu > li.mm-active > a i,
+.quixnav .metismenu > li > a.active i {
+    color: #ffffff !important; /* Aktif menüde ikon bembeyaz parlasın */
 }
 
 .quixnav .metismenu > li > a .nav-text {
@@ -38,26 +178,28 @@
     overflow: hidden !important;
     text-overflow: ellipsis !important;
     line-height: normal !important;
+    letter-spacing: 0.2px;
 }
 
-/* Alt Menü Elemanları */
-.quixnav .metismenu ul a {
-    display: flex !important;
-    align-items: center !important;
-    padding-left: 48px !important;
+/* Çıkış Yap Butonu */
+.quixnav .metismenu .nav-link-logout {
+    border: 1px dashed rgba(220, 53, 69, 0.4) !important;
+    margin-top: 10px !important;
 }
 
-.quixnav .metismenu ul a i {
-    width: 18px !important;
-    min-width: 18px !important;
-    margin-right: 8px !important;
-    font-size: 0.85rem !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
+.quixnav .metismenu .nav-link-logout:hover {
+    background-color: rgba(220, 53, 69, 0.2) !important;
+    border-color: #dc3545 !important;
 }
 
-/* Üst Finansal Kartlar (Stat Widgets) - İkonların Kusursuz Daire Yapılması */
+.quixnav .metismenu .nav-link-logout span {
+    color: #ff6b7d !important;
+    font-weight: 700 !important;
+}
+
+/* --------------------------------------------------------------------------
+   3. STAT WIDGETS & FINANSAL KARTLAR (İkon & Daire Düzeltmesi)
+   -------------------------------------------------------------------------- */
 .stat-widget-one {
     display: flex !important;
     align-items: center !important;
@@ -69,13 +211,14 @@
     justify-content: center !important;
     vertical-align: middle !important;
     margin-right: 15px !important;
+    flex-shrink: 0;
 }
 
 .stat-widget-one .stat-icon i {
-    width: 58px !important;
-    min-width: 58px !important;
-    height: 58px !important;
-    min-height: 58px !important;
+    width: 56px !important;
+    min-width: 56px !important;
+    height: 56px !important;
+    min-height: 56px !important;
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -83,7 +226,7 @@
     border-width: 2.5px !important;
     border-style: solid !important;
     padding: 0 !important;
-    font-size: 24px !important;
+    font-size: 22px !important;
     line-height: 1 !important;
     text-align: center !important;
     box-sizing: border-box !important;
@@ -95,6 +238,7 @@
     display: flex !important;
     flex-direction: column !important;
     justify-content: center !important;
+    min-width: 0;
 }
 
 .stat-widget-one .stat-text {
@@ -102,21 +246,264 @@
     font-weight: 500 !important;
     color: #6c757d !important;
     margin-bottom: 2px !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .stat-widget-one .stat-digit {
-    font-size: 20px !important;
+    font-size: 1.3rem !important;
     font-weight: 700 !important;
     line-height: 1.2 !important;
+    white-space: nowrap;
 }
 
-/* Genel Kart ve Buton İyileştirmeleri */
+/* --------------------------------------------------------------------------
+   4. KARTLAR, BUTONLAR VE TABLOLAR
+   -------------------------------------------------------------------------- */
 .card {
-    border-radius: 10px !important;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05) !important;
-    border: none !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04) !important;
+    border: 1px solid rgba(0, 0, 0, 0.04) !important;
+    margin-bottom: 1.5rem;
+}
+
+.card-header {
+    background-color: transparent !important;
+    padding: 1.1rem 1.25rem !important;
 }
 
 .btn {
-    border-radius: 6px !important;
+    border-radius: 8px !important;
+    font-weight: 500 !important;
+    padding: 0.55rem 1.1rem !important;
+    transition: all 0.2s ease-in-out !important;
+}
+
+.btn-primary {
+    background-color: var(--finflow-primary) !important;
+    border-color: var(--finflow-primary) !important;
+}
+
+.btn-primary:hover {
+    background-color: var(--finflow-primary-dark) !important;
+    border-color: var(--finflow-primary-dark) !important;
+    box-shadow: 0 4px 12px rgba(89, 59, 219, 0.3) !important;
+}
+
+.table-responsive {
+    border-radius: 8px;
+    -webkit-overflow-scrolling: touch;
+}
+
+.table td, .table th {
+    vertical-align: middle !important;
+}
+
+/* --------------------------------------------------------------------------
+   5. MOBİL ÇEKMECE SIDEBAR (OFF-CANVAS DRAWER UI & RESPONSIVE)
+   -------------------------------------------------------------------------- */
+
+/* Mobil Backdrop (Karartma ve Blur) */
+.sidebar-mobile-backdrop {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(15, 23, 42, 0.65);
+    z-index: 1050;
+    backdrop-filter: blur(4px);
+    transition: opacity 0.3s ease;
+}
+
+.sidebar-mobile-backdrop.active {
+    display: block;
+}
+
+/* Mobil Cihazlar (<= 768px) */
+@media (max-width: 768px) {
+    /* Genel yerleşim & padding */
+    .content-body {
+        padding-top: 65px !important;
+        margin-left: 0 !important;
+    }
+
+    .container-fluid {
+        padding-left: 14px !important;
+        padding-right: 14px !important;
+    }
+
+    /* Üst Nav Header & Logo Bar */
+    .nav-header {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 60px !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        background-color: #593bdb !important;
+        z-index: 1030 !important;
+        padding: 0 14px !important;
+    }
+
+    .nav-header .brand-title {
+        display: inline-block !important;
+        font-size: 1.25rem !important;
+    }
+
+    .nav-control {
+        position: static !important;
+        right: auto !important;
+        top: auto !important;
+        line-height: normal !important;
+    }
+
+    .hamburger {
+        padding: 8px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: center !important;
+    }
+
+    .hamburger .line {
+        background-color: #ffffff !important;
+    }
+
+    /* Üst Header (Kullanıcı profili ve tarih) */
+    .header {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 60px !important;
+        z-index: 1020 !important;
+        background: transparent !important;
+        pointer-events: none; /* Arkadaki butonlara tıklamaya engel olmasın */
+    }
+
+    .header .header-content {
+        padding: 0 14px !important;
+        height: 60px !important;
+    }
+
+    .header-left {
+        display: none !important; /* Mobilde uzun tarihi gizle, alan kalsın */
+    }
+
+    .header-right {
+        pointer-events: auto; /* Profil açılır menüsü tıklanabilsin */
+        margin-right: 48px !important; /* Hamburger butonuna çarpmaması için pay */
+    }
+
+    /* MOBİL SIDEBAR: TAM BOY ÇEKMECE (DRAWER) */
+    .quixnav {
+        position: fixed !important;
+        top: 0 !important;
+        bottom: 0 !important;
+        left: -320px !important; /* Ekranın tamamen dışında başlasın */
+        width: 290px !important; /* Orantılı, telefonun %75-80 genişliği */
+        max-width: 85vw !important;
+        height: 100vh !important;
+        z-index: 1060 !important; /* Backdrop'un üstünde */
+        background-color: var(--finflow-sidebar-bg) !important;
+        box-shadow: 5px 0 30px rgba(0, 0, 0, 0.45) !important;
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), left 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        overflow-y: auto !important;
+        padding-bottom: 30px !important;
+    }
+
+    /* Menü açıldığında ekranın solundan kaysın */
+    #main-wrapper.menu-toggle .quixnav {
+        left: 0 !important;
+        transform: translateX(0) !important;
+    }
+
+    /* Mobil Sidebar Başlığı & Kapat Butonu */
+    .sidebar-mobile-header {
+        background-color: rgba(255, 255, 255, 0.05);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+    }
+
+    .sidebar-mobile-header .font-weight-bold {
+        color: #ffffff !important;
+    }
+
+    .sidebar-mobile-close {
+        background: rgba(255, 255, 255, 0.15) !important;
+        border: none !important;
+        color: #ffffff !important;
+        width: 34px;
+        height: 34px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .sidebar-mobile-close i {
+        color: #ffffff !important;
+    }
+
+    /* Mobil Kullanıcı Kartı */
+    .sidebar-user-card {
+        background: rgba(255, 255, 255, 0.03) !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+    }
+
+    .sidebar-user-card strong {
+        color: #ffffff !important;
+    }
+
+    /* Mobilde Menü Linkleri Dokunma Boyutları */
+    .quixnav .metismenu > li > a {
+        padding: 0.85rem 1.1rem !important;
+        font-size: 0.96rem !important;
+    }
+
+    /* Kartlar & Tablolar */
+    .page-titles {
+        margin-bottom: 1rem !important;
+        padding: 0.8rem 0.4rem !important;
+    }
+
+    .page-titles .welcome-text h4 {
+        font-size: 1.2rem !important;
+    }
+
+    .card-body {
+        padding: 1rem !important;
+    }
+
+    .table td, .table th {
+        padding: 0.65rem 0.5rem !important;
+        font-size: 0.85rem !important;
+    }
+
+    .stat-widget-one .stat-icon i {
+        width: 48px !important;
+        min-width: 48px !important;
+        height: 48px !important;
+        min-height: 48px !important;
+        font-size: 19px !important;
+    }
+
+    .stat-widget-one .stat-digit {
+        font-size: 1.15rem !important;
+    }
+}
+
+/* Küçük Telefonlar (<= 480px) */
+@media (max-width: 480px) {
+    .btn {
+        font-size: 0.82rem !important;
+        padding: 0.45rem 0.8rem !important;
+    }
+
+    .stat-widget-one .stat-digit {
+        font-size: 1.05rem !important;
+    }
 }
